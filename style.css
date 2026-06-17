@@ -142,15 +142,59 @@ select {
   margin-top: 3px;
 }
 
-.ta-bort-knapp {
+.kort-knappar {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ta-bort-knapp {
   border: none;
   background: var(--rod);
   color: white;
   border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 15px;
+  padding: 8px 14px;
+  font-size: 14px;
   cursor: pointer;
+}
+
+.andra-knapp {
+  border: none;
+  background: var(--bla);
+  color: white;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ===== Avbryt-knapp i redigeringsläge ===== */
+.avbryt-knapp {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: 2px solid #c8d2dd;
+  border-radius: 10px;
+  background: white;
+  color: #5a6b7b;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ===== Filter-rad ===== */
+.filter-rad {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.filter-rad label {
+  flex: 1;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 0;
 }
 
 .tomt-meddelande {

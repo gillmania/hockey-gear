@@ -75,10 +75,24 @@
           <input id="anteckning" type="text" placeholder="t.ex. börjar bli liten">
         </label>
 
-        <button type="submit" class="stor-knapp">Lägg till</button>
+        <button type="submit" id="utrustning-submit" class="stor-knapp">Lägg till</button>
+        <button type="button" id="avbryt-redigering" class="avbryt-knapp dold" onclick="avbrytRedigering()">Avbryt ändring</button>
       </form>
 
       <h2>Mina grejer</h2>
+
+      <!-- Filter – app.js fyller menyerna med det som finns sparat -->
+      <div class="filter-rad">
+        <label>
+          Typ
+          <select id="filter-typ"></select>
+        </label>
+        <label>
+          Märke
+          <select id="filter-marke"></select>
+        </label>
+      </div>
+
       <!-- Här fyller app.js i alla sparade grejer -->
       <div id="utrustning-lista"></div>
     </section>

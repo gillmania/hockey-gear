@@ -95,22 +95,75 @@ function visaFlik(namn) {
 
 // ===== FLIK 1: Utrustning =====
 
-// Ritar upp listan med alla grejer man har sparat.
+// Vilka filter är valda just nu ("Alla" = visa allt).
+var filterTyp = "Alla";
+var filterMarke = "Alla";
+// Vilken grej redigerar vi just nu? -1 betyder "ingen, vi lägger till en ny".
+var redigeringsIndex = -1;
+
+// Plockar ut alla olika värden för ett fält (t.ex. alla märken som finns sparade).
+function distinkt(grejer, falt) {
+  var sedda = {};
+  var ut = [];
+  for (var i = 0; i < grejer.length; i++) {
+    var v = grejer[i][falt];
+    if (v && !sedda[v]) {
+      sedda[v] = true;
+      ut.push(v);
+    }
+  }
+  ut.sort();
+  return ut;
+}
+
+// Fyller en filter-meny med "Alla" + alla värden, och behåller det man valt.
+function fyllFilter(id, varden, valt) {
+  var s = document.getElementById(id);
+  if (!s) {
+    return;
+  }
+  s.innerHTML = "";
+
+  var alla = document.createElement("option");
+  alla.value = "Alla";
+  alla.textContent = "Alla";
+  s.appendChild(alla);
+
+  for (var i = 0; i < varden.length; i++) {
+    var o = document.createElement("option");
+    o.value = varden[i];
+    o.textContent = varden[i];
+    s.appendChild(o);
+  }
+
+  // Behåll valet om det fortfarande finns, annars "Alla".
+  s.value = (valt === "Alla" || varden.indexOf(valt) >= 0) ? valt : "Alla";
+}
+
+// Ritar upp listan med alla grejer man har sparat (med hänsyn till filtren).
 function ritaUtrustning() {
   var lista = document.getElementById("utrustning-lista");
   var grejer = loadData(NYCKEL_UTRUSTNING, []);
 
-  // Töm listan först så vi inte får dubbletter.
+  // Fyll filter-menyerna utifrån vad som finns sparat.
+  fyllFilter("filter-typ", distinkt(grejer, "typ"), filterTyp);
+  fyllFilter("filter-marke", distinkt(grejer, "marke"), filterMarke);
+  filterTyp = document.getElementById("filter-typ").value;
+  filterMarke = document.getElementById("filter-marke").value;
+
   lista.innerHTML = "";
+  var antalVisade = 0;
 
-  if (grejer.length === 0) {
-    lista.innerHTML = '<p class="tomt-meddelande">Du har inte lagt till något än.</p>';
-    return;
-  }
-
-  // Gå igenom varje grej och gör ett kort.
+  // Gå igenom varje grej och gör ett kort (om det passar filtren).
   for (var i = 0; i < grejer.length; i++) {
     var grej = grejer[i];
+
+    if (filterTyp !== "Alla" && grej.typ !== filterTyp) {
+      continue;
+    }
+    if (filterMarke !== "Alla" && grej.marke !== filterMarke) {
+      continue;
+    }
 
     // Bygg en liten beskrivning av detaljerna.
     var detaljer = "Storlek: " + grej.storlek;
@@ -128,10 +181,63 @@ function ritaUtrustning() {
         '<div class="kort-typ">' + ikonForTyp(grej.typ) + " " + grej.typ + "</div>" +
         '<div class="kort-detalj">' + detaljer + "</div>" +
       "</div>" +
-      '<button class="ta-bort-knapp" onclick="taBortGrej(' + i + ')">Ta bort</button>';
+      '<div class="kort-knappar">' +
+        '<button class="andra-knapp" onclick="redigeraGrej(' + i + ')">Ändra</button>' +
+        '<button class="ta-bort-knapp" onclick="taBortGrej(' + i + ')">Ta bort</button>' +
+      "</div>";
 
     lista.appendChild(kort);
+    antalVisade++;
   }
+
+  // Meddelanden om listan är tom.
+  if (grejer.length === 0) {
+    lista.innerHTML = '<p class="tomt-meddelande">Du har inte lagt till något än.</p>';
+  } else if (antalVisade === 0) {
+    lista.innerHTML = '<p class="tomt-meddelande">Inget matchar filtret.</p>';
+  }
+}
+
+// Laddar en sparad grej in i formuläret för redigering.
+function redigeraGrej(index) {
+  var grejer = loadData(NYCKEL_UTRUSTNING, []);
+  var grej = grejer[index];
+  if (!grej) {
+    return;
+  }
+
+  document.getElementById("typ").value = grej.typ;
+
+  // Märke: känt märke väljs i listan, annars "Annat märke" + eget textfält.
+  var markeSelect = document.getElementById("marke");
+  if (grej.marke && varumarkeViaNamn(grej.marke)) {
+    markeSelect.value = grej.marke;
+    document.getElementById("eget-marke").value = "";
+  } else {
+    markeSelect.value = ""; // "Annat märke"
+    document.getElementById("eget-marke").value = grej.marke || "";
+  }
+  uppdateraEgetMarke();
+  uppdateraStorleksforslag();
+
+  document.getElementById("storlek").value = grej.storlek || "";
+  document.getElementById("anteckning").value = grej.anteckning || "";
+
+  // Gå in i redigeringsläge.
+  redigeringsIndex = index;
+  document.getElementById("utrustning-submit").textContent = "Spara ändring";
+  document.getElementById("avbryt-redigering").classList.remove("dold");
+  document.getElementById("utrustning-form").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+// Avbryter redigeringen utan att spara.
+function avbrytRedigering() {
+  redigeringsIndex = -1;
+  document.getElementById("utrustning-form").reset();
+  uppdateraEgetMarke();
+  uppdateraStorleksforslag();
+  document.getElementById("utrustning-submit").textContent = "Lägg till";
+  document.getElementById("avbryt-redigering").classList.add("dold");
 }
 
 // Lägger till en ny grej när man skickar formuläret.
@@ -154,8 +260,17 @@ function laggTillGrej(event) {
     anteckning: document.getElementById("anteckning").value
   };
 
-  grejer.push(nyGrej);
+  if (redigeringsIndex >= 0) {
+    grejer[redigeringsIndex] = nyGrej; // Spara ändringen på rätt grej.
+  } else {
+    grejer.push(nyGrej); // Lägg till en ny grej.
+  }
   saveData(NYCKEL_UTRUSTNING, grejer);
+
+  // Lämna redigeringsläge och nollställ knappen.
+  redigeringsIndex = -1;
+  document.getElementById("utrustning-submit").textContent = "Lägg till";
+  document.getElementById("avbryt-redigering").classList.add("dold");
 
   // Töm fälten och rita om listan.
   document.getElementById("utrustning-form").reset();
@@ -255,6 +370,10 @@ function uppdateraStorleksforslag() {
 
 // Tar bort grej nummer "index" från listan.
 function taBortGrej(index) {
+  // Om vi höll på att redigera något, avbryt först (annars pekar index fel).
+  if (redigeringsIndex >= 0) {
+    avbrytRedigering();
+  }
   var grejer = loadData(NYCKEL_UTRUSTNING, []);
   grejer.splice(index, 1); // Ta bort en grej på den platsen.
   saveData(NYCKEL_UTRUSTNING, grejer);
@@ -453,6 +572,16 @@ document.getElementById("matt-form").addEventListener("submit", sparaMatt);
 document.getElementById("typ").addEventListener("change", uppdateraStorleksforslag);
 document.getElementById("marke").addEventListener("change", uppdateraStorleksforslag);
 document.getElementById("marke").addEventListener("change", uppdateraEgetMarke);
+
+// Filtren i "Mina grejer".
+document.getElementById("filter-typ").addEventListener("change", function () {
+  filterTyp = this.value;
+  ritaUtrustning();
+});
+document.getElementById("filter-marke").addEventListener("change", function () {
+  filterMarke = this.value;
+  ritaUtrustning();
+});
 
 fyllUtrustningMarken();   // Fyll märkesmenyn i "Min utrustning"
 uppdateraEgetMarke();     // Dölj "Ange märke"-fältet från start
