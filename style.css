@@ -1,0 +1,326 @@
+/* ===== Enkel stil gjord för mobilen (iPhone 12) ===== */
+
+/* Färger som används i hela appen. Ändra här så ändras allt. */
+:root {
+  --bla: #0b5cab;
+  --bla-mork: #084a8c;
+  --rod: #c0392b;
+  --bakgrund: #f2f5f9;
+  --kort: #ffffff;
+  --text: #1d2733;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bakgrund);
+  color: var(--text);
+  /* Lite extra plats längst ner så sista knappen inte fastnar i kanten */
+  padding-bottom: 40px;
+}
+
+header {
+  background: var(--bla);
+  color: white;
+  padding: 18px 16px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+/* ===== Flik-knapparna högst upp ===== */
+.flikar {
+  display: flex;
+  background: var(--bla-mork);
+}
+
+.flik-knapp {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  background: var(--bla-mork);
+  color: #cfe0f3;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.flik-knapp.aktiv {
+  background: var(--bakgrund);
+  color: var(--bla);
+}
+
+main {
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h2 {
+  font-size: 18px;
+  margin: 22px 0 10px;
+}
+
+.hjalptext {
+  color: #5a6b7b;
+  margin-top: 0;
+  font-size: 15px;
+}
+
+/* ===== Formulär ===== */
+form {
+  background: var(--kort);
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+label {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+input,
+select {
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px;
+  font-size: 16px; /* 16px gör att iPhone inte zoomar in när man skriver */
+  border: 1px solid #c8d2dd;
+  border-radius: 8px;
+  font-weight: normal;
+}
+
+/* ===== Stora knappar som är lätta att trycka på ===== */
+.stor-knapp {
+  width: 100%;
+  padding: 15px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 10px;
+  background: var(--bla);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.stor-knapp:active {
+  background: var(--bla-mork);
+}
+
+/* ===== Korten i listan över utrustning ===== */
+.kort {
+  background: var(--kort);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.kort-info .kort-typ {
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.kort-info .kort-detalj {
+  color: #5a6b7b;
+  font-size: 14px;
+  margin-top: 3px;
+}
+
+.ta-bort-knapp {
+  flex-shrink: 0;
+  border: none;
+  background: var(--rod);
+  color: white;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.tomt-meddelande {
+  color: #7a8a99;
+  text-align: center;
+  padding: 20px;
+}
+
+.sparat-meddelande {
+  margin-top: 14px;
+  text-align: center;
+  font-weight: bold;
+  color: #1d8a4a;
+}
+
+/* ===== Människofiguren på mått-fliken ===== */
+#matt-figur {
+  display: block;
+  width: 100%;
+  max-width: 360px;
+  margin: 6px auto 16px;
+  background: var(--kort);
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  padding: 8px;
+}
+
+/* Armar och ben (tjocka rundade streck) */
+#matt-figur .lem {
+  fill: none;
+  stroke: #2c6fb3;
+  stroke-width: 16;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Tröjan på bålen */
+#matt-figur .troja {
+  fill: url(#troja);
+  stroke: #2c6fb3;
+  stroke-width: 2;
+}
+
+/* Hud (huvud, hals, händer) */
+#matt-figur .hud {
+  fill: #f3cfa6;
+  stroke: #d9a978;
+  stroke-width: 2;
+}
+
+#matt-figur .hand {
+  fill: #f3cfa6;
+  stroke: #d9a978;
+  stroke-width: 2;
+}
+
+/* Ansikte */
+#matt-figur .oga {
+  fill: #3a3a3a;
+}
+
+#matt-figur .mun {
+  fill: none;
+  stroke: #3a3a3a;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* Skridskor */
+#matt-figur .skridsko {
+  fill: #2b3a4a;
+}
+
+/* Streck från kroppen ut till etiketten */
+#matt-figur .ledare line {
+  stroke: #9bb1c6;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+/* Vit ring runt prickarna så de syns bättre */
+#matt-figur .prickar circle {
+  stroke: white;
+  stroke-width: 2;
+}
+
+/* De numrerade prickarna */
+#matt-figur .prickar circle {
+  fill: #e8703a;
+}
+
+#matt-figur .prickar text {
+  fill: white;
+  font-size: 15px;
+  font-weight: bold;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Texten med själva måtten */
+#matt-figur .figur-etikett text {
+  font-size: 13px;
+  fill: var(--text);
+}
+
+#matt-figur .figur-etikett tspan {
+  font-weight: bold;
+  fill: var(--bla);
+}
+
+#matt-figur .figur-topp {
+  font-size: 14px;
+  font-weight: bold;
+  fill: var(--text);
+}
+
+#matt-figur .figur-topp tspan {
+  fill: var(--bla);
+}
+
+/* ===== Förslag på storlek ===== */
+.forslag-rad {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--kort);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.forslag-ikon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.forslag-namn {
+  flex: 1;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.forslag-svar {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.forslag-storlek {
+  display: inline-block;
+  background: var(--bla);
+  color: white;
+  font-weight: bold;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 15px;
+}
+
+.forslag-ungefar {
+  color: #7a8a99;
+  font-size: 13px;
+}
+
+.forslag-tom {
+  color: #9aa7b4;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Hjälpklass för att gömma saker */
+.dold {
+  display: none;
+}

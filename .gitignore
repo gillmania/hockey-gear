@@ -1,0 +1,8 @@
+# Claude Code-filer ska inte publiceras
+CLAUDE.md
+.claude/
+
+# Operativsystemets skräpfiler
+.DS_Store
+Thumbs.db
+desktop.ini

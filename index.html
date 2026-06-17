@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="sv" translate="no">
+<head>
+  <meta charset="UTF-8">
+  <!-- Gör så att sidan ser bra ut på mobilen (iPhone 12) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b5cab">
+  <!-- Säg åt webbläsaren att INTE översätta sidan – den är redan på svenska -->
+  <meta name="google" content="notranslate">
+  <!-- Gör att appen kan sparas på hemskärmen och se ut som en riktig app -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Min Hockey">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+  <title>Min Hockeyutrustning</title>
+</head>
+<body>
+
+  <header>
+    <h1>🏒 Min Hockeyutrustning</h1>
+  </header>
+
+  <!-- Knappar för att byta mellan de två sidorna -->
+  <nav class="flikar">
+    <button id="flik-utrustning" class="flik-knapp aktiv" onclick="visaFlik('utrustning')">Min utrustning</button>
+    <button id="flik-matt" class="flik-knapp" onclick="visaFlik('matt')">Mina mått</button>
+  </nav>
+
+  <main>
+
+    <!-- ===== FLIK 1: MIN UTRUSTNING ===== -->
+    <section id="sida-utrustning" class="sida">
+      <h2>Lägg till en grej</h2>
+
+      <form id="utrustning-form">
+        <label>
+          Typ av grej
+          <select id="typ" required>
+            <option value="Hjälm">⛑️ Hjälm</option>
+            <option value="Halsskydd">🧣 Halsskydd</option>
+            <option value="Axelskydd">🦺 Axelskydd</option>
+            <option value="Armbågsskydd">💪 Armbågsskydd</option>
+            <option value="Handskar">🧤 Handskar</option>
+            <option value="Hockeybyxa">🩳 Hockeybyxa</option>
+            <option value="Benskydd/skenor">🦵 Benskydd/skenor</option>
+            <option value="Skridskor">⛸️ Skridskor</option>
+            <option value="Klubba">🏒 Klubba</option>
+            <option value="Suspensoar">🛡️ Suspensoar</option>
+            <option value="Hockeyväska">🧳 Hockeyväska</option>
+            <option value="Annat">📦 Annat</option>
+          </select>
+        </label>
+
+        <label>
+          Storlek
+          <input id="storlek" type="text" placeholder="t.ex. JR M eller skostl 36" required>
+        </label>
+
+        <label>
+          Märke (om du vill)
+          <input id="marke" type="text" placeholder="t.ex. Bauer, CCM">
+        </label>
+
+        <label>
+          Anteckning (om du vill)
+          <input id="anteckning" type="text" placeholder="t.ex. börjar bli liten">
+        </label>
+
+        <button type="submit" class="stor-knapp">Lägg till</button>
+      </form>
+
+      <h2>Mina grejer</h2>
+      <!-- Här fyller app.js i alla sparade grejer -->
+      <div id="utrustning-lista"></div>
+    </section>
+
+    <!-- ===== FLIK 2: MINA MÅTT ===== -->
+    <section id="sida-matt" class="sida dold">
+      <h2>Mina mått</h2>
+      <p class="hjalptext">Måtten kommer från Bauers storleksguide. Spara dem så är det lätt att välja rätt storlek när du köper nytt skydd.</p>
+
+      <!-- Människofigur som visar var måtten sitter. app.js fyller i siffrorna. -->
+      <svg id="matt-figur" viewBox="0 0 340 450" xmlns="http://www.w3.org/2000/svg" aria-label="Figur som visar var måtten sitter">
+
+        <defs>
+          <!-- Mjuk färgövergång på tröjan -->
+          <linearGradient id="troja" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#4a90e2" />
+            <stop offset="1" stop-color="#2c6fb3" />
+          </linearGradient>
+        </defs>
+
+        <!-- Längd och vikt högst upp -->
+        <text x="170" y="22" text-anchor="middle" class="figur-topp">Längd: <tspan id="val-langd">–</tspan>   ·   Vikt: <tspan id="val-vikt">–</tspan></text>
+
+        <!-- ===== Själva kroppen ===== -->
+        <g class="kropp">
+          <!-- Ben (byxor) -->
+          <path class="lem ben" d="M152,205 L140,310 L138,398" />
+          <path class="lem ben" d="M188,205 L200,310 L202,398" />
+          <!-- Skridskor -->
+          <path class="skridsko" d="M124,398 h26 a4,4 0 0 1 4,4 v6 h-34 v-6 a4,4 0 0 1 4,-4 Z" />
+          <path class="skridsko" d="M188,398 h26 a4,4 0 0 1 4,4 v6 h-34 v-6 a4,4 0 0 1 4,-4 Z" />
+          <!-- Armar (tröjärm + hand) -->
+          <path class="lem arm" d="M138,98 L110,156 L120,212" />
+          <path class="lem arm" d="M202,98 L230,156 L220,212" />
+          <circle class="hand" cx="120" cy="214" r="9" />
+          <circle class="hand" cx="220" cy="214" r="9" />
+          <!-- Bål (tröja) -->
+          <path class="troja" d="M138,96 Q138,88 148,88 L192,88 Q202,88 202,96 L196,165 Q193,208 170,208 Q147,208 144,165 Z" />
+          <!-- Hals -->
+          <rect class="hud" x="162" y="74" width="16" height="14" rx="5" />
+          <!-- Huvud -->
+          <circle class="hud" cx="170" cy="54" r="27" />
+          <!-- Ansikte -->
+          <circle class="oga" cx="161" cy="52" r="2.6" />
+          <circle class="oga" cx="179" cy="52" r="2.6" />
+          <path class="mun" d="M161,62 Q170,69 179,62" />
+        </g>
+
+        <!-- ===== Streck från kropp till etikett ===== -->
+        <g class="ledare">
+          <line x1="158" y1="122" x2="100" y2="124" /><!-- 1 bröst -->
+          <line x1="240" y1="184" x2="248" y2="184" /><!-- 2 underarm -->
+          <line x1="158" y1="202" x2="100" y2="204" /><!-- 3 midja -->
+          <line x1="126" y1="352" x2="100" y2="354" /><!-- 4 skenben -->
+          <line x1="235" y1="226" x2="248" y2="236" /><!-- 5 hand -->
+        </g>
+
+        <!-- ===== Numrerade prickar ===== -->
+        <g class="prickar">
+          <g transform="translate(170,122)"><circle r="13"/><text>1</text></g>
+          <g transform="translate(227,184)"><circle r="13"/><text>2</text></g>
+          <g transform="translate(170,202)"><circle r="13"/><text>3</text></g>
+          <g transform="translate(139,352)"><circle r="13"/><text>4</text></g>
+          <g transform="translate(222,226)"><circle r="13"/><text>5</text></g>
+        </g>
+
+        <!-- ===== Etiketter med värden ===== -->
+        <g class="figur-etikett">
+          <text x="96"  y="126" text-anchor="end">Bröst: <tspan id="val-brost">–</tspan></text>
+          <text x="252" y="188" text-anchor="start">Underarm: <tspan id="val-underarm">–</tspan></text>
+          <text x="96"  y="208" text-anchor="end">Midja: <tspan id="val-midja">–</tspan></text>
+          <text x="96"  y="358" text-anchor="end">Skenben: <tspan id="val-skenben">–</tspan></text>
+          <text x="252" y="240" text-anchor="start">Hand: <tspan id="val-handlangd">–</tspan></text>
+        </g>
+      </svg>
+
+      <!-- Förslag på storlek räknas ut av app.js utifrån måtten -->
+      <h2>Förslag på storlek</h2>
+      <p class="hjalptext">Räknas ut automatiskt från dina mått enligt Bauers guide. Mät noga och prova alltid i butik om du kan.</p>
+      <div id="forslag-lista"></div>
+
+      <form id="matt-form">
+        <label>
+          Längd (cm)
+          <input id="langd" type="number" inputmode="numeric" placeholder="t.ex. 145">
+        </label>
+
+        <label>
+          Vikt (kg)
+          <input id="vikt" type="number" inputmode="numeric" placeholder="t.ex. 38">
+        </label>
+
+        <label>
+          1. Bröstomkrets (cm) – mät runt bröstet vid bröstvårtorna · för axelskydd
+          <input id="brost" type="number" inputmode="numeric" placeholder="t.ex. 72">
+        </label>
+
+        <label>
+          2. Underarm (cm) – armbågens baksida till handleden, arm i 90° · för armbågsskydd
+          <input id="underarm" type="number" inputmode="numeric" placeholder="t.ex. 24">
+        </label>
+
+        <label>
+          3. Midjemått (cm) – där byxan sitter, minus ca 7 cm · för hockeybyxa
+          <input id="midja" type="number" inputmode="numeric" placeholder="t.ex. 60">
+        </label>
+
+        <label>
+          4. Skenben (cm) – knäskålens mitt till yttre fotknöl · för benskydd
+          <input id="skenben" type="number" inputmode="numeric" placeholder="t.ex. 32">
+        </label>
+
+        <label>
+          5. Handlängd (cm) – långfingrets topp till handleden · för handskar
+          <input id="handlangd" type="number" inputmode="numeric" placeholder="t.ex. 14">
+        </label>
+
+        <button type="submit" class="stor-knapp">Spara mått</button>
+      </form>
+
+      <div id="matt-sparat" class="sparat-meddelande dold">✅ Sparat!</div>
+    </section>
+
+  </main>
+
+  <script src="storleksguide.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
