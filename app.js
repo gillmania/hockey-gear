@@ -140,11 +140,17 @@ function laggTillGrej(event) {
 
   var grejer = loadData(NYCKEL_UTRUSTNING, []);
 
+  // Vilket märke? Har man valt "Annat märke" använder vi det man själv skrivit.
+  var marke = document.getElementById("marke").value;
+  if (marke === "") {
+    marke = document.getElementById("eget-marke").value;
+  }
+
   // Hämta det man skrivit i formuläret.
   var nyGrej = {
     typ: document.getElementById("typ").value,
     storlek: document.getElementById("storlek").value,
-    marke: document.getElementById("marke").value,
+    marke: marke,
     anteckning: document.getElementById("anteckning").value
   };
 
@@ -154,6 +160,7 @@ function laggTillGrej(event) {
   // Töm fälten och rita om listan.
   document.getElementById("utrustning-form").reset();
   uppdateraStorleksforslag(); // Uppdatera storleksförslagen efter att fälten nollställts.
+  uppdateraEgetMarke();       // Dölj "Ange märke"-fältet igen.
   ritaUtrustning();
 }
 
@@ -204,6 +211,20 @@ function fyllUtrustningMarken() {
   annat.value = "";
   annat.textContent = "Annat märke";
   valj.appendChild(annat);
+}
+
+// Visar fältet "Ange märke" bara när man valt "Annat märke".
+function uppdateraEgetMarke() {
+  var valj = document.getElementById("marke");
+  var rad = document.getElementById("eget-marke-rad");
+  if (!valj || !rad) {
+    return;
+  }
+  if (valj.value === "") {
+    rad.classList.remove("dold"); // "Annat märke" valt – visa fältet.
+  } else {
+    rad.classList.add("dold");
+  }
 }
 
 // Visar förslag på storlekar (i datalist) utifrån vald typ och valt märke.
@@ -431,8 +452,10 @@ document.getElementById("matt-form").addEventListener("submit", sparaMatt);
 // När man byter typ eller märke i "Min utrustning": uppdatera storleksförslagen.
 document.getElementById("typ").addEventListener("change", uppdateraStorleksforslag);
 document.getElementById("marke").addEventListener("change", uppdateraStorleksforslag);
+document.getElementById("marke").addEventListener("change", uppdateraEgetMarke);
 
 fyllUtrustningMarken();   // Fyll märkesmenyn i "Min utrustning"
+uppdateraEgetMarke();     // Dölj "Ange märke"-fältet från start
 uppdateraStorleksforslag(); // Visa storleksförslag direkt
 fyllVarumarken();         // Fyll märkesväljaren på mått-fliken
 ritaUtrustning();
