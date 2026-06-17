@@ -327,6 +327,29 @@ select {
   font-style: italic;
 }
 
+/* ===== Dela-knappen längst ner ===== */
+footer {
+  padding: 8px 16px 30px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.dela-knapp {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid var(--bla);
+  border-radius: 10px;
+  background: white;
+  color: var(--bla);
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.dela-knapp:active {
+  background: #eaf1fa;
+}
+
 /* Hjälpklass för att gömma saker */
 .dold {
   display: none;

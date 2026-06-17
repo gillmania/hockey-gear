@@ -46,6 +46,32 @@ function saveData(key, value) {
 }
 
 
+// Adressen till appen som vi delar. Byt till App Store-länken när appen finns där.
+var APP_LANK = "https://gillmania.github.io/hockey-gear/";
+
+// Delar appen med telefonens inbyggda dela-ruta. Kopierar länken om delning inte stöds.
+function delaApp() {
+  var data = {
+    title: "Min Hockeyutrustning",
+    text: "Kolla in den här appen för att hålla koll på din hockeyutrustning och rätt storlek!",
+    url: APP_LANK
+  };
+
+  if (navigator.share) {
+    // iPhone och de flesta mobiler: visa systemets dela-ruta.
+    navigator.share(data).catch(function () {
+      // Användaren avbröt – gör inget.
+    });
+  } else if (navigator.clipboard) {
+    // Dator utan dela-stöd: kopiera länken istället.
+    navigator.clipboard.writeText(APP_LANK);
+    alert("Länk kopierad:\n" + APP_LANK);
+  } else {
+    alert("Dela den här länken:\n" + APP_LANK);
+  }
+}
+
+
 // ===== Byta mellan de två flikarna =====
 function visaFlik(namn) {
   var sidaUtrustning = document.getElementById("sida-utrustning");
