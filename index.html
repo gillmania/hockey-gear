@@ -42,7 +42,7 @@
             <option value="Armbågsskydd">💪 Armbågsskydd</option>
             <option value="Handskar">🧤 Handskar</option>
             <option value="Hockeybyxa">🩳 Hockeybyxa</option>
-            <option value="Benskydd/skenor">🦵 Benskydd/skenor</option>
+            <option value="Benskydd">🦵 Benskydd</option>
             <option value="Skridskor">⛸️ Skridskor</option>
             <option value="Klubba">🏒 Klubba</option>
             <option value="Suspensoar">🛡️ Suspensoar</option>
@@ -52,13 +52,16 @@
         </label>
 
         <label>
-          Storlek
-          <input id="storlek" type="text" placeholder="t.ex. JR M eller skostl 36" required>
+          Märke
+          <!-- app.js fyller den här med Bauer, CCM och "Annat märke" -->
+          <select id="marke"></select>
         </label>
 
         <label>
-          Märke (om du vill)
-          <input id="marke" type="text" placeholder="t.ex. Bauer, CCM">
+          Storlek
+          <!-- Förslag på storlekar (från valt märke + typ) visas, men du kan även skriva eget -->
+          <input id="storlek" type="text" list="storlek-forslag" placeholder="välj eller skriv storlek" required>
+          <datalist id="storlek-forslag"></datalist>
         </label>
 
         <label>

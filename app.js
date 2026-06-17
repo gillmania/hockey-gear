@@ -15,7 +15,7 @@ var IKONER = {
   "Armbågsskydd": "💪",
   "Handskar": "🧤",
   "Hockeybyxa": "🩳",
-  "Benskydd/skenor": "🦵",
+  "Benskydd": "🦵",
   "Skridskor": "⛸️",
   "Klubba": "🏒",
   "Suspensoar": "🛡️",
@@ -153,7 +153,83 @@ function laggTillGrej(event) {
 
   // Töm fälten och rita om listan.
   document.getElementById("utrustning-form").reset();
+  uppdateraStorleksforslag(); // Uppdatera storleksförslagen efter att fälten nollställts.
   ritaUtrustning();
+}
+
+
+// ===== Märke och storleksförslag i "Min utrustning" =====
+
+// Vilken av märkets tabeller gäller för varje typ av grej?
+// Typer som inte finns här (klubba, väska ...) har inga storleksförslag.
+var TYP_TILL_LISTA = {
+  "Hjälm": "hjalm",
+  "Axelskydd": "storlekar",
+  "Armbågsskydd": "storlekar",
+  "Hockeybyxa": "storlekar",
+  "Benskydd": "benskydd",
+  "Skridskor": "skridskor",
+  "Handskar": "handskar"
+};
+
+// Hittar ett märke utifrån dess namn (t.ex. "Bauer").
+function varumarkeViaNamn(namn) {
+  var ids = Object.keys(VARUMARKEN);
+  for (var i = 0; i < ids.length; i++) {
+    if (VARUMARKEN[ids[i]].namn === namn) {
+      return VARUMARKEN[ids[i]];
+    }
+  }
+  return null;
+}
+
+// Fyller märkes-menyn i "Min utrustning" med alla märken plus "Annat märke".
+function fyllUtrustningMarken() {
+  var valj = document.getElementById("marke");
+  if (!valj) {
+    return;
+  }
+
+  valj.innerHTML = "";
+  var ids = Object.keys(VARUMARKEN);
+  for (var i = 0; i < ids.length; i++) {
+    var alternativ = document.createElement("option");
+    alternativ.value = VARUMARKEN[ids[i]].namn;
+    alternativ.textContent = VARUMARKEN[ids[i]].namn;
+    valj.appendChild(alternativ);
+  }
+
+  // Ett alternativ för märken vi inte har storlekar för (då får man skriva storleken själv).
+  var annat = document.createElement("option");
+  annat.value = "";
+  annat.textContent = "Annat märke";
+  valj.appendChild(annat);
+}
+
+// Visar förslag på storlekar (i datalist) utifrån vald typ och valt märke.
+function uppdateraStorleksforslag() {
+  var typ = document.getElementById("typ").value;
+  var markeNamn = document.getElementById("marke").value;
+  var datalist = document.getElementById("storlek-forslag");
+  if (!datalist) {
+    return;
+  }
+
+  datalist.innerHTML = "";
+
+  var marke = varumarkeViaNamn(markeNamn);
+  var listKey = TYP_TILL_LISTA[typ];
+  if (!marke || !listKey || !marke[listKey]) {
+    return; // Inget märke valt, eller ingen storlekstabell för den här typen.
+  }
+
+  var lista = marke[listKey];
+  for (var i = 0; i < lista.length; i++) {
+    var etikett = lista[i].storlek || lista[i].namn; // t.ex. 14" eller "Junior M"
+    var alternativ = document.createElement("option");
+    alternativ.value = etikett;
+    datalist.appendChild(alternativ);
+  }
 }
 
 // Tar bort grej nummer "index" från listan.
@@ -214,7 +290,7 @@ function visaForslag(matt) {
     { ikon: "🦺", namn: "Axelskydd",                   varde: matt.brost,    lista: marke.storlekar, falt: "brost" },
     { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: marke.storlekar, falt: "underarm" },
     { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: marke.storlekar, falt: "midja", avdrag: marke.midjaAvdrag },
-    { ikon: "🦵", namn: "Benskydd/skenor",             varde: matt.skenben,  lista: marke.benskydd,  falt: "cm" },
+    { ikon: "🦵", namn: "Benskydd",                    varde: matt.skenben,  lista: marke.benskydd,  falt: "cm" },
     { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: marke.handskar,  falt: "cm" },
     { ikon: "⛸️", namn: "Skridskor",                   varde: matt.fotlangd, typ: "skridsko", skridskor: marke.skridskor }
   ];
@@ -352,6 +428,12 @@ function sparaMatt(event) {
 document.getElementById("utrustning-form").addEventListener("submit", laggTillGrej);
 document.getElementById("matt-form").addEventListener("submit", sparaMatt);
 
-fyllVarumarken();
+// När man byter typ eller märke i "Min utrustning": uppdatera storleksförslagen.
+document.getElementById("typ").addEventListener("change", uppdateraStorleksforslag);
+document.getElementById("marke").addEventListener("change", uppdateraStorleksforslag);
+
+fyllUtrustningMarken();   // Fyll märkesmenyn i "Min utrustning"
+uppdateraStorleksforslag(); // Visa storleksförslag direkt
+fyllVarumarken();         // Fyll märkesväljaren på mått-fliken
 ritaUtrustning();
 ritaMatt();
