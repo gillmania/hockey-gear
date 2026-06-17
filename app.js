@@ -182,7 +182,7 @@ function visaForslag(matt) {
     { ikon: "👕", namn: "Allmän storlek (tröja m.m.)", varde: matt.langd,    lista: BAUER_STORLEKAR, falt: "langd" },
     { ikon: "🦺", namn: "Axelskydd",                   varde: matt.brost,    lista: BAUER_STORLEKAR, falt: "brost" },
     { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: BAUER_STORLEKAR, falt: "underarm" },
-    { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: BAUER_STORLEKAR, falt: "midja" },
+    { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: BAUER_STORLEKAR, falt: "midja", avdrag: 7.6 },
     { ikon: "🦵", namn: "Benskydd/skenor",             varde: matt.skenben,  lista: BAUER_BENSKYDD,  falt: "cm" },
     { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: BAUER_HANDSKAR,  falt: "cm" },
     { ikon: "⛸️", namn: "Skridskor",                   varde: matt.fotlangd, typ: "skridsko" }
@@ -206,7 +206,12 @@ function visaForslag(matt) {
       }
       traff = hittaSkridsko(fot);
     } else {
-      traff = hittaStorlek(f.varde, f.lista, f.falt);
+      // En del skydd (hockeybyxan) ska ha ett avdrag innan vi slår upp storleken.
+      var varde = f.varde;
+      if (f.avdrag && varde) {
+        varde = parseFloat(varde) - f.avdrag;
+      }
+      traff = hittaStorlek(varde, f.lista, f.falt);
     }
 
     // Texten som visar storleken.
