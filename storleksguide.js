@@ -179,6 +179,59 @@ var CCM_HJALM = [
   { storlek: "Large",   cm: [58.5, 63] }
 ];
 
+// CCM handskar: handlängd (långfingertopp till handled) i cm → tum-storlek. Källa: SkatePro.
+var CCM_HANDSKAR = [
+  { storlek: '8"',  cm: [10.5, 13] },
+  { storlek: '9"',  cm: [11.5, 14] },
+  { storlek: '10"', cm: [13, 15.5] },
+  { storlek: '11"', cm: [14, 16.5] },
+  { storlek: '12"', cm: [15.5, 18] },
+  { storlek: '13"', cm: [16.5, 19] },
+  { storlek: '14"', cm: [18, 20.5] },
+  { storlek: '15"', cm: [19, 22] }
+];
+
+// CCM skridskor: fotlängd (cm) → skridskostorlek. Källa: SkatePro.
+// CCM anger ingen skenlängd, därför sken: null (visas som "skena –").
+var CCM_SKRIDSKOR = [
+  { fot: 14.5, storlek: "Youth 6",    sken: null },
+  { fot: 15.2, storlek: "Youth 7",    sken: null },
+  { fot: 16.2, storlek: "Youth 8",    sken: null },
+  { fot: 17.0, storlek: "Youth 9",    sken: null },
+  { fot: 17.4, storlek: "Youth 9.5",  sken: null },
+  { fot: 17.8, storlek: "Youth 10",   sken: null },
+  { fot: 18.2, storlek: "Youth 10.5", sken: null },
+  { fot: 18.7, storlek: "Youth 11",   sken: null },
+  { fot: 19.1, storlek: "Youth 11.5", sken: null },
+  { fot: 19.5, storlek: "Youth 12",   sken: null },
+  { fot: 19.9, storlek: "Youth 12.5", sken: null },
+  { fot: 20.3, storlek: "Youth 13",   sken: null },
+  { fot: 20.6, storlek: "Youth 13.5", sken: null },
+  { fot: 21.0, storlek: "Junior 1",   sken: null },
+  { fot: 21.4, storlek: "Junior 1.5", sken: null },
+  { fot: 21.8, storlek: "Junior 2",   sken: null },
+  { fot: 22.2, storlek: "Junior 2.5", sken: null },
+  { fot: 22.6, storlek: "Junior 3",   sken: null },
+  { fot: 23.1, storlek: "Junior 3.5", sken: null },
+  { fot: 23.5, storlek: "Junior 4",   sken: null },
+  { fot: 23.9, storlek: "Junior 4.5", sken: null },
+  { fot: 24.3, storlek: "Junior 5",   sken: null },
+  { fot: 24.7, storlek: "Junior 5.5", sken: null },
+  { fot: 25.1, storlek: "Senior 6",   sken: null },
+  { fot: 25.5, storlek: "Senior 6.5", sken: null },
+  { fot: 26.0, storlek: "Senior 7",   sken: null },
+  { fot: 26.4, storlek: "Senior 7.5", sken: null },
+  { fot: 26.8, storlek: "Senior 8",   sken: null },
+  { fot: 27.2, storlek: "Senior 8.5", sken: null },
+  { fot: 27.7, storlek: "Senior 9",   sken: null },
+  { fot: 28.1, storlek: "Senior 9.5", sken: null },
+  { fot: 28.5, storlek: "Senior 10",  sken: null },
+  { fot: 28.9, storlek: "Senior 10.5",sken: null },
+  { fot: 29.4, storlek: "Senior 11",  sken: null },
+  { fot: 29.8, storlek: "Senior 11.5",sken: null },
+  { fot: 30.2, storlek: "Senior 12",  sken: null }
+];
+
 
 // ===== Alla varumärken samlade =====
 // Märkesväljaren i appen visar dessa, och förslagen använder det valda märkets tabeller.
@@ -198,8 +251,8 @@ var VARUMARKEN = {
     namn: "CCM",
     storlekar: CCM_STORLEKAR,
     benskydd: CCM_BENSKYDD,
-    handskar: null,
-    skridskor: null,
+    handskar: CCM_HANDSKAR,
+    skridskor: CCM_SKRIDSKOR,
     hjalm: CCM_HJALM,
     midjaAvdrag: 0
   }
