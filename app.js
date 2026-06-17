@@ -177,7 +177,8 @@ var MATT_FALT = [
   { id: "skenben", enhet: "cm" },
   { id: "handlangd", enhet: "cm" },
   { id: "fotlangd", enhet: "cm" },
-  { id: "skostorlek", enhet: "EU" }
+  { id: "skostorlek", enhet: "EU" },
+  { id: "huvud", enhet: "cm" }
 ];
 
 // Fyller i formuläret med de mått som redan är sparade och uppdaterar figuren.
@@ -208,6 +209,7 @@ function visaForslag(matt) {
 
   // Varje rad: vilken ikon, vad det heter, vilket mått och vilken tabell vi slår i.
   var forslag = [
+    { ikon: "⛑️", namn: "Hjälm",                       varde: matt.huvud,    lista: marke.hjalm,     falt: "cm" },
     { ikon: "👕", namn: "Allmän storlek (tröja m.m.)", varde: matt.langd,    lista: marke.storlekar, falt: "langd" },
     { ikon: "🦺", namn: "Axelskydd",                   varde: matt.brost,    lista: marke.storlekar, falt: "brost" },
     { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: marke.storlekar, falt: "underarm" },

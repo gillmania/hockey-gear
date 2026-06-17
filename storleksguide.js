@@ -162,6 +162,15 @@ var CCM_BENSKYDD = [
   { storlek: '17"', cm: [43, 46] }
 ];
 
+// CCM hjälm: huvudomkrets (cm) → storlek. Siffror från CCM Tacks 910.
+// OBS: hjälmar är justerbara och varierar mellan modeller – prova alltid.
+var CCM_HJALM = [
+  { storlek: "X-Small", cm: [51.5, 55.5] },
+  { storlek: "Small",   cm: [52.5, 57] },
+  { storlek: "Medium",  cm: [55.5, 60] },
+  { storlek: "Large",   cm: [58.5, 63] }
+];
+
 
 // ===== Alla varumärken samlade =====
 // Märkesväljaren i appen visar dessa, och förslagen använder det valda märkets tabeller.
@@ -174,6 +183,7 @@ var VARUMARKEN = {
     benskydd: BAUER_BENSKYDD,
     handskar: BAUER_HANDSKAR,
     skridskor: BAUER_SKRIDSKOR,
+    hjalm: null,
     midjaAvdrag: 7.6
   },
   ccm: {
@@ -182,6 +192,7 @@ var VARUMARKEN = {
     benskydd: CCM_BENSKYDD,
     handskar: null,
     skridskor: null,
+    hjalm: CCM_HJALM,
     midjaAvdrag: 0
   }
 };

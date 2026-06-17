@@ -120,6 +120,7 @@
 
         <!-- ===== Streck från kropp till etikett ===== -->
         <g class="ledare">
+          <line x1="150" y1="44"  x2="100" y2="48"  /><!-- 7 huvud -->
           <line x1="158" y1="122" x2="100" y2="124" /><!-- 1 bröst -->
           <line x1="240" y1="184" x2="248" y2="184" /><!-- 2 underarm -->
           <line x1="158" y1="202" x2="100" y2="204" /><!-- 3 midja -->
@@ -130,6 +131,7 @@
 
         <!-- ===== Numrerade prickar ===== -->
         <g class="prickar">
+          <g transform="translate(150,44)"><circle r="13"/><text>7</text></g>
           <g transform="translate(170,122)"><circle r="13"/><text>1</text></g>
           <g transform="translate(227,184)"><circle r="13"/><text>2</text></g>
           <g transform="translate(170,202)"><circle r="13"/><text>3</text></g>
@@ -140,6 +142,7 @@
 
         <!-- ===== Etiketter med värden ===== -->
         <g class="figur-etikett">
+          <text x="96"  y="50"  text-anchor="end">Huvud: <tspan id="val-huvud">–</tspan></text>
           <text x="96"  y="126" text-anchor="end">Bröst: <tspan id="val-brost">–</tspan></text>
           <text x="252" y="188" text-anchor="start">Underarm: <tspan id="val-underarm">–</tspan></text>
           <text x="96"  y="208" text-anchor="end">Midja: <tspan id="val-midja">–</tspan></text>
@@ -210,6 +213,11 @@
         <label>
           EU-skostorlek (om du inte mätt foten) – ungefärligt, mät och prova alltid i butik
           <input id="skostorlek" type="number" inputmode="numeric" step="0.5" placeholder="t.ex. 36">
+        </label>
+
+        <label>
+          7. Huvudomkrets (cm) – mät runt huvudet strax ovanför öronen och ögonbrynen · för hjälm
+          <input id="huvud" type="number" inputmode="numeric" step="0.5" placeholder="t.ex. 54">
         </label>
 
         <button type="submit" class="stor-knapp">Spara mått</button>
