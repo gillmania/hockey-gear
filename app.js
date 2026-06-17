@@ -282,16 +282,16 @@ function laggTillGrej(event) {
 
 // ===== Märke och storleksförslag i "Min utrustning" =====
 
-// Vilken av märkets tabeller gäller för varje typ av grej?
+// Vilken del i märkets forslag-tabell motsvarar varje typ av grej?
 // Typer som inte finns här (klubba, väska ...) har inga storleksförslag.
-var TYP_TILL_LISTA = {
+var TYP_TILL_FORSLAG = {
   "Hjälm": "hjalm",
-  "Axelskydd": "storlekar",
-  "Armbågsskydd": "storlekar",
-  "Hockeybyxa": "storlekar",
+  "Axelskydd": "axel",
+  "Armbågsskydd": "armbage",
+  "Hockeybyxa": "byxa",
   "Benskydd": "benskydd",
-  "Skridskor": "skridskor",
-  "Handskar": "handskar"
+  "Skridskor": "skridsko",
+  "Handskar": "handske"
 };
 
 // Hittar ett märke utifrån dess namn (t.ex. "Bauer").
@@ -354,12 +354,12 @@ function uppdateraStorleksforslag() {
   datalist.innerHTML = "";
 
   var marke = varumarkeViaNamn(markeNamn);
-  var listKey = TYP_TILL_LISTA[typ];
-  if (!marke || !listKey || !marke[listKey]) {
+  var id = TYP_TILL_FORSLAG[typ];
+  if (!marke || !id || !marke.forslag[id]) {
     return; // Inget märke valt, eller ingen storlekstabell för den här typen.
   }
 
-  var lista = marke[listKey];
+  var lista = marke.forslag[id].tabell;
   for (var i = 0; i < lista.length; i++) {
     var etikett = lista[i].storlek || lista[i].namn; // t.ex. 14" eller "Junior M"
     var alternativ = document.createElement("option");
@@ -418,92 +418,90 @@ function ritaMatt() {
   visaForslag(matt); // Uppdatera storleksförslagen.
 }
 
+// Ordningen som förslagen visas i, och ikon + namn för varje del.
+var FORSLAG_ORDNING = ["hjalm", "allman", "axel", "armbage", "byxa", "benskydd", "handske", "skridsko"];
+var FORSLAG_META = {
+  hjalm:    { ikon: "⛑️", namn: "Hjälm" },
+  allman:   { ikon: "👕", namn: "Allmän storlek (tröja m.m.)" },
+  axel:     { ikon: "🦺", namn: "Axelskydd" },
+  armbage:  { ikon: "💪", namn: "Armbågsskydd" },
+  byxa:     { ikon: "🩳", namn: "Hockeybyxa" },
+  benskydd: { ikon: "🦵", namn: "Benskydd" },
+  handske:  { ikon: "🧤", namn: "Handskar" },
+  skridsko: { ikon: "⛸️", namn: "Skridskor" }
+};
+
 // Räknar ut och visar vilken storlek man borde ha på varje skydd.
+// Varje del hämtar sin konfiguration (mått + tabell) från det valda märket, så att olika
+// märken kan använda olika mått trots att användaren bara matat in måtten en gång.
 function visaForslag(matt) {
-  // Vilket märke har man valt? Förslagen använder det märkets tabeller.
   var marke = VARUMARKEN[valtVarumarkeId()];
-
-  // Varje rad: vilken ikon, vad det heter, vilket mått och vilken tabell vi slår i.
-  var forslag = [
-    { ikon: "⛑️", namn: "Hjälm",                       varde: matt.huvud,    lista: marke.hjalm,     falt: "cm" },
-    { ikon: "👕", namn: "Allmän storlek (tröja m.m.)", varde: matt.langd,    lista: marke.storlekar, falt: "langd" },
-    { ikon: "🦺", namn: "Axelskydd",                   varde: matt.brost,    lista: marke.storlekar, falt: "brost" },
-    { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: marke.storlekar, falt: "underarm" },
-    { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: marke.storlekar, falt: "midja", avdrag: marke.midjaAvdrag },
-    { ikon: "🦵", namn: "Benskydd",                    varde: matt.skenben,  lista: marke.benskydd,  falt: "cm", avdrag: marke.benskyddAvdrag, notis: marke.benskyddAvdrag ? "justerat: " + marke.namn + " mäter till skridskokanten" : null },
-    { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: marke.handskar,  falt: "cm" },
-    { ikon: "⛸️", namn: "Skridskor",                   varde: matt.fotlangd, typ: "skridsko", skridskor: marke.skridskor }
-  ];
-
   var ruta = document.getElementById("forslag-lista");
   ruta.innerHTML = "";
 
-  for (var i = 0; i < forslag.length; i++) {
-    var f = forslag[i];
+  for (var i = 0; i < FORSLAG_ORDNING.length; i++) {
+    var id = FORSLAG_ORDNING[i];
+    var meta = FORSLAG_META[id];
+    var konfig = marke.forslag[id]; // Hur det här märket sizar just den här delen.
 
-    // Har det valda märket en tabell för den här utrustningen? (CCM saknar t.ex. skridskor.)
-    var harTabell = (f.typ === "skridsko")
-      ? !!(f.skridskor && f.skridskor.length)
-      : !!(f.lista && f.lista.length);
-
-    // Skridskor räknas ut på ett eget sätt (fotlängd → storlek + skenlängd).
-    var traff = null;
-    var franSko = false; // Sant om vi räknade från skostorlek istället för mätt fot.
-    if (harTabell && f.typ === "skridsko") {
-      var fot = matt.fotlangd;
-      // Har vi ingen mätt fotlängd? Räkna ungefärligt från skostorleken istället.
-      if (!fot && matt.skostorlek) {
-        fot = skostorlekTillFotlangd(matt.skostorlek);
-        franSko = true;
-      }
-      traff = hittaSkridsko(fot, f.skridskor);
-    } else if (harTabell) {
-      // En del skydd (hockeybyxan) ska ha ett avdrag innan vi slår upp storleken.
-      var varde = f.varde;
-      if (f.avdrag && varde) {
-        varde = parseFloat(varde) - f.avdrag;
-      }
-      traff = hittaStorlek(varde, f.lista, f.falt);
-    }
-
-    // Texten som visar storleken.
     var svar;
-    if (!harTabell) {
+    if (!konfig) {
+      // Märket saknar guide för den här delen (t.ex. Warrior har ingen hjälm).
       svar = '<span class="forslag-tom">' + marke.namn + " har ingen guide för detta</span>";
-    } else if (!traff) {
-      svar = '<span class="forslag-tom">Fyll i måttet</span>';
-    } else if (traff.rad.storlek) {
-      // Storlek som text (t.ex. 14" eller Junior 3).
-      svar = '<span class="forslag-storlek">' + traff.rad.storlek + "</span>";
     } else {
-      // Skydd med storlek som Youth/Junior/Senior.
-      svar = '<span class="forslag-storlek">' + traff.rad.namn + "</span>";
-    }
+      var traff = null;
+      var franSko = false; // Sant om skridskon räknades från skostorlek istället för mätt fot.
 
-    // Skridskor visar även skenlängd (bladlängd) i mm.
-    if (traff && f.typ === "skridsko") {
-      var sken = traff.rad.sken ? "skena " + traff.rad.sken + " mm" : "skena –";
-      if (franSko) {
-        sken += " · från skostorlek, mät och prova i butik";
+      if (konfig.typ === "skridsko") {
+        // Skridskor: fotlängd → storlek + skenlängd. Faller tillbaka på skostorlek.
+        var fot = matt[konfig.matt];
+        if (!fot && matt.skostorlek) {
+          fot = skostorlekTillFotlangd(matt.skostorlek);
+          franSko = true;
+        }
+        traff = hittaSkridsko(fot, konfig.tabell);
+      } else {
+        // Övriga delar: ta måttet, dra ev. av för märkets mätmetod, slå upp storleken.
+        var varde = matt[konfig.matt];
+        if (konfig.avdrag && varde) {
+          varde = parseFloat(varde) - konfig.avdrag;
+        }
+        traff = hittaStorlek(varde, konfig.tabell, konfig.falt);
       }
-      svar += ' <span class="forslag-extra">' + sken + "</span>";
-    }
 
-    // En extra notis (t.ex. att måttet justerats för märkets mätmetod).
-    if (traff && f.notis) {
-      svar += ' <span class="forslag-extra">' + f.notis + "</span>";
-    }
+      if (!traff) {
+        svar = '<span class="forslag-tom">Fyll i måttet</span>';
+      } else if (traff.rad.storlek) {
+        svar = '<span class="forslag-storlek">' + traff.rad.storlek + "</span>"; // t.ex. 14"
+      } else {
+        svar = '<span class="forslag-storlek">' + traff.rad.namn + "</span>"; // t.ex. Junior M
+      }
 
-    // Om det inte var en exakt träff (eller bara uppskattat från skostorlek): visa "ungefär".
-    if (traff && (!traff.exakt || franSko)) {
-      svar += ' <span class="forslag-ungefar">(ungefär)</span>';
+      // Skridskor visar även skenlängd (bladlängd) i mm.
+      if (traff && konfig.typ === "skridsko") {
+        var sken = traff.rad.sken ? "skena " + traff.rad.sken + " mm" : "skena –";
+        if (franSko) {
+          sken += " · från skostorlek, mät och prova i butik";
+        }
+        svar += ' <span class="forslag-extra">' + sken + "</span>";
+      }
+
+      // En extra notis (t.ex. att måttet justerats för märkets mätmetod).
+      if (traff && konfig.notis) {
+        svar += ' <span class="forslag-extra">' + konfig.notis + "</span>";
+      }
+
+      // Inte exakt träff (eller bara uppskattat): visa "ungefär".
+      if (traff && (!traff.exakt || franSko)) {
+        svar += ' <span class="forslag-ungefar">(ungefär)</span>';
+      }
     }
 
     var rad = document.createElement("div");
     rad.className = "forslag-rad";
     rad.innerHTML =
-      '<span class="forslag-ikon">' + f.ikon + "</span>" +
-      '<span class="forslag-namn">' + f.namn + "</span>" +
+      '<span class="forslag-ikon">' + meta.ikon + "</span>" +
+      '<span class="forslag-namn">' + meta.namn + "</span>" +
       '<span class="forslag-svar">' + svar + "</span>";
     ruta.appendChild(rad);
   }

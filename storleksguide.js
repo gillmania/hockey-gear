@@ -234,30 +234,86 @@ var CCM_SKRIDSKOR = [
 ];
 
 
+// ===== Warrior =====
+// Warriors guide (intersport.se) sizar allt efter LÄNGD (cm), inte omkrets/skenben.
+// Guiden täcker bara axelskydd, armbågsskydd och benskydd. Storlekarna överlappar mellan
+// åldersgrupper (Minior/Junior/Int/Senior) – därför är namnen åldersmärkta.
+
+// Axelskydd OCH armbågsskydd använder samma längd-tabell hos Warrior.
+var WARRIOR_AXEL = [
+  { namn: "Minior S", langd: [99, 124] },
+  { namn: "Minior L", langd: [111, 135] },
+  { namn: "Junior S", langd: [129, 142] },
+  { namn: "Junior L", langd: [137, 155] },
+  { namn: "Int S",    langd: [152, 165] },
+  { namn: "Int L",    langd: [163, 175] },
+  { namn: "Senior S", langd: [163, 175] },
+  { namn: "Senior M", langd: [168, 183] },
+  { namn: "Senior L", langd: [175, 188] },
+  { namn: "Senior XL",langd: [175, 188] }
+];
+
+// Warrior benskydd: tum-storlek efter längd (cm).
+var WARRIOR_BENSKYDD = [
+  { storlek: '8"',  langd: [102, 112] },
+  { storlek: '9"',  langd: [112, 122] },
+  { storlek: '10"', langd: [122, 134] },
+  { storlek: '11"', langd: [132, 142] },
+  { storlek: '12"', langd: [142, 158] },
+  { storlek: '13"', langd: [158, 168] },
+  { storlek: '14"', langd: [170, 178] },
+  { storlek: '15"', langd: [170, 178] },
+  { storlek: '16"', langd: [178, 188] },
+  { storlek: '17"', langd: [183, 999] }
+];
+
+
 // ===== Alla varumärken samlade =====
-// Märkesväljaren i appen visar dessa, och förslagen använder det valda märkets tabeller.
-// midjaAvdrag = cm som dras av från midjemåttet innan byxstorlek slås upp (Bauer 7,6; CCM 0).
-// handskar/skridskor = null om märkets guide saknar den utrustningen.
+// Varje märke har en "forslag"-tabell: för varje utrustningsdel anges vilket MÅTT som ska
+// användas, vilken TABELL och vilket FÄLT. Det gör att olika märken kan mäta olika
+// (Bauer/CCM efter omkrets, Warrior efter längd) men användaren matar bara in måtten EN gång.
+//   matt   = vilket mått (nyckel i hockeyMeasurements) som styr storleken
+//   tabell = vilken storlekstabell vi slår i
+//   falt   = vilket fält i tabellen som jämförs (t.ex. "brost", "cm", "langd")
+//   avdrag = cm som dras av från måttet innan uppslag (märkets mätmetod), valfritt
+//   notis  = liten förklarande text, valfritt
+//   typ:"skridsko" = specialfall som även ger skenlängd
+// Saknar ett märke en del finns den helt enkelt inte med (visas som "ingen guide").
 var VARUMARKEN = {
   bauer: {
     namn: "Bauer",
-    storlekar: BAUER_STORLEKAR,
-    benskydd: BAUER_BENSKYDD,
-    handskar: BAUER_HANDSKAR,
-    skridskor: BAUER_SKRIDSKOR,
-    hjalm: BAUER_HJALM,
-    midjaAvdrag: 7.6,
-    benskyddAvdrag: 0
+    forslag: {
+      hjalm:    { matt: "huvud",     tabell: BAUER_HJALM,     falt: "cm" },
+      allman:   { matt: "langd",     tabell: BAUER_STORLEKAR, falt: "langd" },
+      axel:     { matt: "brost",     tabell: BAUER_STORLEKAR, falt: "brost" },
+      armbage:  { matt: "underarm",  tabell: BAUER_STORLEKAR, falt: "underarm" },
+      byxa:     { matt: "midja",     tabell: BAUER_STORLEKAR, falt: "midja", avdrag: 7.6 },
+      benskydd: { matt: "skenben",   tabell: BAUER_BENSKYDD,  falt: "cm" },
+      handske:  { matt: "handlangd", tabell: BAUER_HANDSKAR,  falt: "cm" },
+      skridsko: { matt: "fotlangd",  tabell: BAUER_SKRIDSKOR, typ: "skridsko" }
+    }
   },
   ccm: {
     namn: "CCM",
-    storlekar: CCM_STORLEKAR,
-    benskydd: CCM_BENSKYDD,
-    handskar: CCM_HANDSKAR,
-    skridskor: CCM_SKRIDSKOR,
-    hjalm: CCM_HJALM,
-    midjaAvdrag: 0,
-    benskyddAvdrag: 5.5
+    forslag: {
+      hjalm:    { matt: "huvud",     tabell: CCM_HJALM,     falt: "cm" },
+      allman:   { matt: "langd",     tabell: CCM_STORLEKAR, falt: "langd" },
+      axel:     { matt: "brost",     tabell: CCM_STORLEKAR, falt: "brost" },
+      armbage:  { matt: "underarm",  tabell: CCM_STORLEKAR, falt: "underarm" },
+      byxa:     { matt: "midja",     tabell: CCM_STORLEKAR, falt: "midja", avdrag: 0 },
+      benskydd: { matt: "skenben",   tabell: CCM_BENSKYDD,  falt: "cm", avdrag: 5.5, notis: "justerat: CCM mäter till skridskokanten" },
+      handske:  { matt: "handlangd", tabell: CCM_HANDSKAR,  falt: "cm" },
+      skridsko: { matt: "fotlangd",  tabell: CCM_SKRIDSKOR, typ: "skridsko" }
+    }
+  },
+  warrior: {
+    namn: "Warrior",
+    forslag: {
+      allman:   { matt: "langd", tabell: WARRIOR_AXEL,     falt: "langd" },
+      axel:     { matt: "langd", tabell: WARRIOR_AXEL,     falt: "langd" },
+      armbage:  { matt: "langd", tabell: WARRIOR_AXEL,     falt: "langd" },
+      benskydd: { matt: "langd", tabell: WARRIOR_BENSKYDD, falt: "langd" }
+    }
   }
 };
 
