@@ -211,7 +211,7 @@ function visaForslag(matt) {
     { ikon: "👕", namn: "Allmän storlek (tröja m.m.)", varde: matt.langd,    lista: marke.storlekar, falt: "langd" },
     { ikon: "🦺", namn: "Axelskydd",                   varde: matt.brost,    lista: marke.storlekar, falt: "brost" },
     { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: marke.storlekar, falt: "underarm" },
-    { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: marke.storlekar, falt: "midja", avdrag: 7.6 },
+    { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: marke.storlekar, falt: "midja", avdrag: marke.midjaAvdrag },
     { ikon: "🦵", namn: "Benskydd/skenor",             varde: matt.skenben,  lista: marke.benskydd,  falt: "cm" },
     { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: marke.handskar,  falt: "cm" },
     { ikon: "⛸️", namn: "Skridskor",                   varde: matt.fotlangd, typ: "skridsko", skridskor: marke.skridskor }
@@ -223,10 +223,15 @@ function visaForslag(matt) {
   for (var i = 0; i < forslag.length; i++) {
     var f = forslag[i];
 
+    // Har det valda märket en tabell för den här utrustningen? (CCM saknar t.ex. skridskor.)
+    var harTabell = (f.typ === "skridsko")
+      ? !!(f.skridskor && f.skridskor.length)
+      : !!(f.lista && f.lista.length);
+
     // Skridskor räknas ut på ett eget sätt (fotlängd → storlek + skenlängd).
-    var traff;
+    var traff = null;
     var franSko = false; // Sant om vi räknade från skostorlek istället för mätt fot.
-    if (f.typ === "skridsko") {
+    if (harTabell && f.typ === "skridsko") {
       var fot = matt.fotlangd;
       // Har vi ingen mätt fotlängd? Räkna ungefärligt från skostorleken istället.
       if (!fot && matt.skostorlek) {
@@ -234,7 +239,7 @@ function visaForslag(matt) {
         franSko = true;
       }
       traff = hittaSkridsko(fot, f.skridskor);
-    } else {
+    } else if (harTabell) {
       // En del skydd (hockeybyxan) ska ha ett avdrag innan vi slår upp storleken.
       var varde = f.varde;
       if (f.avdrag && varde) {
@@ -245,7 +250,9 @@ function visaForslag(matt) {
 
     // Texten som visar storleken.
     var svar;
-    if (!traff) {
+    if (!harTabell) {
+      svar = '<span class="forslag-tom">' + marke.namn + " har ingen guide för detta</span>";
+    } else if (!traff) {
       svar = '<span class="forslag-tom">Fyll i måttet</span>';
     } else if (traff.rad.storlek) {
       // Storlek som text (t.ex. 14" eller Junior 3).

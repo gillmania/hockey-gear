@@ -130,18 +130,60 @@ function hittaSkridsko(fotlangd, skridskor) {
 }
 
 
+// ===== CCM =====
+// Siffror från CCM:s officiella storleksguide (monkeysportseurope.com).
+// OBS: CCM:s guide saknar skridskor och handskar – därför är de null nedan.
+// OBS: CCM:s byxtabell anger riktigt midjemått (inget avdrag, till skillnad från Bauer).
+var CCM_STORLEKAR = [
+  { namn: "Youth S",  alder: "", vikt: null, langd: [102, 109], brost: [58, 58],   underarm: [11, 15],  midja: [51, 55] },
+  { namn: "Youth M",  alder: "", vikt: null, langd: [109, 117], brost: [58, 64],   underarm: [14, 17],  midja: [53, 57] },
+  { namn: "Youth L",  alder: "", vikt: null, langd: [117, 127], brost: [60, 70],   underarm: [15, 19],  midja: [56, 60] },
+  { namn: "Junior S", alder: "", vikt: null, langd: [127, 137], brost: [60, 76],   underarm: [16, 20],  midja: [58, 64] },
+  { namn: "Junior M", alder: "", vikt: null, langd: [137, 147], brost: [67, 81],   underarm: [18, 22],  midja: [62, 72] },
+  { namn: "Junior L", alder: "", vikt: null, langd: [147, 157], brost: [75, 89],   underarm: [20, 25],  midja: [69, 79] },
+  { namn: "Junior XL",alder: "", vikt: null, langd: null,       brost: null,       underarm: null,      midja: [69, 74] },
+  { namn: "Senior S", alder: "", vikt: null, langd: [157, 168], brost: [86, 97],   underarm: [23, 27],  midja: [74, 82] },
+  { namn: "Senior M", alder: "", vikt: null, langd: [168, 178], brost: [94, 104],  underarm: [25, 29],  midja: [79, 89] },
+  { namn: "Senior L", alder: "", vikt: null, langd: [178, 188], brost: [102, 112], underarm: [28, 32],  midja: [86, 99] },
+  { namn: "Senior XL",alder: "", vikt: null, langd: [183, 999], brost: [109, 122], underarm: [29, 999], midja: [95, 107] }
+];
+
+// CCM benskydd (skenor): skenbenets längd (tibia) i cm → tum-storlek.
+var CCM_BENSKYDD = [
+  { storlek: '8"',  cm: [20, 23] },
+  { storlek: '9"',  cm: [23, 25] },
+  { storlek: '10"', cm: [25, 28] },
+  { storlek: '11"', cm: [28, 30] },
+  { storlek: '12"', cm: [30, 33] },
+  { storlek: '13"', cm: [33, 36] },
+  { storlek: '14"', cm: [36, 38] },
+  { storlek: '15"', cm: [38, 41] },
+  { storlek: '16"', cm: [41, 43] },
+  { storlek: '17"', cm: [43, 46] }
+];
+
+
 // ===== Alla varumärken samlade =====
 // Märkesväljaren i appen visar dessa, och förslagen använder det valda märkets tabeller.
-// Lägg till fler märken här när du har deras officiella siffror.
+// midjaAvdrag = cm som dras av från midjemåttet innan byxstorlek slås upp (Bauer 7,6; CCM 0).
+// handskar/skridskor = null om märkets guide saknar den utrustningen.
 var VARUMARKEN = {
   bauer: {
     namn: "Bauer",
     storlekar: BAUER_STORLEKAR,
     benskydd: BAUER_BENSKYDD,
     handskar: BAUER_HANDSKAR,
-    skridskor: BAUER_SKRIDSKOR
+    skridskor: BAUER_SKRIDSKOR,
+    midjaAvdrag: 7.6
+  },
+  ccm: {
+    namn: "CCM",
+    storlekar: CCM_STORLEKAR,
+    benskydd: CCM_BENSKYDD,
+    handskar: null,
+    skridskor: null,
+    midjaAvdrag: 0
   }
-  // ccm: { namn: "CCM", storlekar: CCM_STORLEKAR, benskydd: ..., handskar: ..., skridskor: ... }
 };
 
 
