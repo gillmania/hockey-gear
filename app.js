@@ -149,7 +149,8 @@ var MATT_FALT = [
   { id: "underarm", enhet: "cm" },
   { id: "midja", enhet: "cm" },
   { id: "skenben", enhet: "cm" },
-  { id: "handlangd", enhet: "cm" }
+  { id: "handlangd", enhet: "cm" },
+  { id: "fotlangd", enhet: "cm" }
 ];
 
 // Fyller i formuläret med de mått som redan är sparade och uppdaterar figuren.
@@ -182,7 +183,8 @@ function visaForslag(matt) {
     { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: BAUER_STORLEKAR, falt: "underarm" },
     { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: BAUER_STORLEKAR, falt: "midja" },
     { ikon: "🦵", namn: "Benskydd/skenor",             varde: matt.skenben,  lista: BAUER_BENSKYDD,  falt: "cm" },
-    { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: BAUER_HANDSKAR,  falt: "cm" }
+    { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: BAUER_HANDSKAR,  falt: "cm" },
+    { ikon: "⛸️", namn: "Skridskor",                   varde: matt.fotlangd, typ: "skridsko" }
   ];
 
   var ruta = document.getElementById("forslag-lista");
@@ -190,18 +192,31 @@ function visaForslag(matt) {
 
   for (var i = 0; i < forslag.length; i++) {
     var f = forslag[i];
-    var traff = hittaStorlek(f.varde, f.lista, f.falt);
+
+    // Skridskor räknas ut på ett eget sätt (fotlängd → storlek + skenlängd).
+    var traff;
+    if (f.typ === "skridsko") {
+      traff = hittaSkridsko(f.varde);
+    } else {
+      traff = hittaStorlek(f.varde, f.lista, f.falt);
+    }
 
     // Texten som visar storleken.
     var svar;
     if (!traff) {
       svar = '<span class="forslag-tom">Fyll i måttet</span>';
     } else if (traff.rad.storlek) {
-      // Benskydd/handskar har storlek i tum (t.ex. 14").
+      // Storlek som text (t.ex. 14" eller Junior 3).
       svar = '<span class="forslag-storlek">' + traff.rad.storlek + "</span>";
     } else {
       // Skydd med storlek som Youth/Junior/Senior.
       svar = '<span class="forslag-storlek">' + traff.rad.namn + "</span>";
+    }
+
+    // Skridskor visar även skenlängd (bladlängd) i mm.
+    if (traff && f.typ === "skridsko") {
+      var sken = traff.rad.sken ? "skena " + traff.rad.sken + " mm" : "skena –";
+      svar += ' <span class="forslag-extra">' + sken + "</span>";
     }
 
     // Om det inte var en exakt träff: visa att det är ungefärligt.

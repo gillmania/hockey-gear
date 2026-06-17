@@ -314,6 +314,13 @@ select {
   font-size: 13px;
 }
 
+.forslag-extra {
+  display: block;
+  color: #5a6b7b;
+  font-size: 12px;
+  margin-top: 3px;
+}
+
 .forslag-tom {
   color: #9aa7b4;
   font-size: 14px;

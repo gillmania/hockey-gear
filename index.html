@@ -125,6 +125,7 @@
           <line x1="158" y1="202" x2="100" y2="204" /><!-- 3 midja -->
           <line x1="126" y1="352" x2="100" y2="354" /><!-- 4 skenben -->
           <line x1="235" y1="226" x2="248" y2="236" /><!-- 5 hand -->
+          <line x1="126" y1="408" x2="100" y2="410" /><!-- 6 fot -->
         </g>
 
         <!-- ===== Numrerade prickar ===== -->
@@ -134,6 +135,7 @@
           <g transform="translate(170,202)"><circle r="13"/><text>3</text></g>
           <g transform="translate(139,352)"><circle r="13"/><text>4</text></g>
           <g transform="translate(222,226)"><circle r="13"/><text>5</text></g>
+          <g transform="translate(139,408)"><circle r="13"/><text>6</text></g>
         </g>
 
         <!-- ===== Etiketter med värden ===== -->
@@ -143,6 +145,7 @@
           <text x="96"  y="208" text-anchor="end">Midja: <tspan id="val-midja">–</tspan></text>
           <text x="96"  y="358" text-anchor="end">Skenben: <tspan id="val-skenben">–</tspan></text>
           <text x="252" y="240" text-anchor="start">Hand: <tspan id="val-handlangd">–</tspan></text>
+          <text x="96"  y="414" text-anchor="end">Fot: <tspan id="val-fotlangd">–</tspan></text>
         </g>
       </svg>
 
@@ -185,6 +188,11 @@
         <label>
           5. Handlängd (cm) – långfingrets topp till handleden · för handskar
           <input id="handlangd" type="number" inputmode="numeric" placeholder="t.ex. 14">
+        </label>
+
+        <label>
+          6. Fotlängd (cm) – ställ foten på ett papper, mät från häl till längsta tå · för skridskor
+          <input id="fotlangd" type="number" inputmode="numeric" step="0.1" placeholder="t.ex. 22.5">
         </label>
 
         <button type="submit" class="stor-knapp">Spara mått</button>

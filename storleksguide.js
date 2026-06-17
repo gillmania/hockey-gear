@@ -53,6 +53,65 @@ var BAUER_HANDSKAR = [
 ];
 
 
+// Skridskor: fotlängd (cm) → rekommenderad skridskostorlek + skenlängd (sken, mm).
+// fot = fotlängd i cm (mät från häl till längsta tå).
+// sken = bladlängd från Bauers TUUK-tabell. null = saknas i TUUK-tabellen (gäller Youth-storlekar).
+// Listan är sorterad från minst till störst fot.
+var BAUER_SKRIDSKOR = [
+  { fot: 14.5, storlek: "Youth 6",    sken: null },
+  { fot: 15.2, storlek: "Youth 7",    sken: null },
+  { fot: 16.2, storlek: "Youth 8",    sken: null },
+  { fot: 17.0, storlek: "Youth 9",    sken: null },
+  { fot: 17.4, storlek: "Youth 9.5",  sken: null },
+  { fot: 17.8, storlek: "Youth 10",   sken: null },
+  { fot: 18.3, storlek: "Youth 10.5", sken: null },
+  { fot: 18.7, storlek: "Youth 11",   sken: null },
+  { fot: 19.1, storlek: "Youth 11.5", sken: null },
+  { fot: 19.5, storlek: "Youth 12",   sken: null },
+  { fot: 19.9, storlek: "Youth 12.5", sken: null },
+  { fot: 20.7, storlek: "Youth 13.5", sken: null },
+  { fot: 21.0, storlek: "Junior 1",   sken: 212 },
+  { fot: 21.4, storlek: "Junior 1.5", sken: 212 },
+  { fot: 21.8, storlek: "Junior 2",   sken: 221 },
+  { fot: 22.2, storlek: "Junior 2.5", sken: 221 },
+  { fot: 22.6, storlek: "Junior 3",   sken: 230 },
+  { fot: 23.1, storlek: "Junior 3.5", sken: 230 },
+  { fot: 23.5, storlek: "Junior 4",   sken: 238 },
+  { fot: 24.3, storlek: "Junior 4.5", sken: 238 },
+  { fot: 24.7, storlek: "Junior 5",   sken: 246 },
+  { fot: 24.9, storlek: "Junior 5.5", sken: 246 },
+  { fot: 25.1, storlek: "Senior 6",   sken: 254 },
+  { fot: 25.5, storlek: "Senior 6.5", sken: 254 },
+  { fot: 26.0, storlek: "Senior 7",   sken: 263 },
+  { fot: 26.4, storlek: "Senior 7.5", sken: 263 },
+  { fot: 26.8, storlek: "Senior 8",   sken: 272 },
+  { fot: 27.2, storlek: "Senior 8.5", sken: 272 },
+  { fot: 27.7, storlek: "Senior 9",   sken: 280 },
+  { fot: 28.1, storlek: "Senior 9.5", sken: 280 },
+  { fot: 28.5, storlek: "Senior 10",  sken: 288 },
+  { fot: 28.9, storlek: "Senior 10.5",sken: 288 }
+];
+
+// Hittar rätt skridskostorlek utifrån fotlängd.
+// Skridskor ska rymma foten, så vi väljer den minsta storlek vars fotlängd räcker (avrundar uppåt).
+function hittaSkridsko(fotlangd) {
+  var tal = parseFloat(fotlangd);
+  if (!fotlangd || isNaN(tal)) {
+    return null; // Ingen fotlängd ifylld än.
+  }
+
+  // Leta efter första storlek vars fotmått är minst lika stort som foten.
+  for (var i = 0; i < BAUER_SKRIDSKOR.length; i++) {
+    if (BAUER_SKRIDSKOR[i].fot >= tal) {
+      return { rad: BAUER_SKRIDSKOR[i], exakt: true };
+    }
+  }
+
+  // Foten är större än hela tabellen – ta största storleken (ungefärligt).
+  return { rad: BAUER_SKRIDSKOR[BAUER_SKRIDSKOR.length - 1], exakt: false };
+}
+
+
 // ===== Hjälpfunktion som hittar rätt storlek =====
 // Den letar i en lista efter den rad där värdet passar i intervallet.
 // "faltNamn" är vilket mått vi tittar på, t.ex. "brost" eller "cm".
