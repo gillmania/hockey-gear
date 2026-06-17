@@ -150,7 +150,8 @@ var MATT_FALT = [
   { id: "midja", enhet: "cm" },
   { id: "skenben", enhet: "cm" },
   { id: "handlangd", enhet: "cm" },
-  { id: "fotlangd", enhet: "cm" }
+  { id: "fotlangd", enhet: "cm" },
+  { id: "skostorlek", enhet: "EU" }
 ];
 
 // Fyller i formuläret med de mått som redan är sparade och uppdaterar figuren.
@@ -195,8 +196,15 @@ function visaForslag(matt) {
 
     // Skridskor räknas ut på ett eget sätt (fotlängd → storlek + skenlängd).
     var traff;
+    var franSko = false; // Sant om vi räknade från skostorlek istället för mätt fot.
     if (f.typ === "skridsko") {
-      traff = hittaSkridsko(f.varde);
+      var fot = matt.fotlangd;
+      // Har vi ingen mätt fotlängd? Räkna ungefärligt från skostorleken istället.
+      if (!fot && matt.skostorlek) {
+        fot = skostorlekTillFotlangd(matt.skostorlek);
+        franSko = true;
+      }
+      traff = hittaSkridsko(fot);
     } else {
       traff = hittaStorlek(f.varde, f.lista, f.falt);
     }
@@ -216,11 +224,14 @@ function visaForslag(matt) {
     // Skridskor visar även skenlängd (bladlängd) i mm.
     if (traff && f.typ === "skridsko") {
       var sken = traff.rad.sken ? "skena " + traff.rad.sken + " mm" : "skena –";
+      if (franSko) {
+        sken += " · från skostorlek, mät och prova i butik";
+      }
       svar += ' <span class="forslag-extra">' + sken + "</span>";
     }
 
-    // Om det inte var en exakt träff: visa att det är ungefärligt.
-    if (traff && !traff.exakt) {
+    // Om det inte var en exakt träff (eller bara uppskattat från skostorlek): visa "ungefär".
+    if (traff && (!traff.exakt || franSko)) {
       svar += ' <span class="forslag-ungefar">(ungefär)</span>';
     }
 

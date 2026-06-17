@@ -92,6 +92,17 @@ var BAUER_SKRIDSKOR = [
   { fot: 28.9, storlek: "Senior 10.5",sken: 288 }
 ];
 
+// Ungefärlig omräkning från EU-skostorlek till fotlängd i cm.
+// OBS: skostorlekar skiljer sig mellan märken – mät hellre foten och prova i butik.
+// Formel: EU-storlek ≈ (fotlängd + 1,5 cm tåmån) × 1,5  =>  fotlängd ≈ EU / 1,5 − 1,5
+function skostorlekTillFotlangd(eu) {
+  var tal = parseFloat(eu);
+  if (!eu || isNaN(tal)) {
+    return null;
+  }
+  return tal / 1.5 - 1.5;
+}
+
 // Hittar rätt skridskostorlek utifrån fotlängd.
 // Skridskor ska rymma foten, så vi väljer den minsta storlek vars fotlängd räcker (avrundar uppåt).
 function hittaSkridsko(fotlangd) {
