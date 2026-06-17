@@ -156,7 +156,8 @@ var CCM_STORLEKAR = [
   { namn: "Senior XL",alder: "", vikt: null, langd: [183, 999], brost: [109, 122], underarm: [29, 999], midja: [95, 107] }
 ];
 
-// CCM benskydd (skenor): skenbenets längd (tibia) i cm → tum-storlek.
+// CCM benskydd: tibia i cm → tum-storlek. OBS: CCM mäter knäskål → skridskoskaftets överkant,
+// vilket är ~5,5 cm kortare än Bauers mått (knäskål → fotknöl). Därför har CCM benskyddAvdrag 5,5.
 var CCM_BENSKYDD = [
   { storlek: '8"',  cm: [20, 23] },
   { storlek: '9"',  cm: [23, 25] },
@@ -245,7 +246,8 @@ var VARUMARKEN = {
     handskar: BAUER_HANDSKAR,
     skridskor: BAUER_SKRIDSKOR,
     hjalm: BAUER_HJALM,
-    midjaAvdrag: 7.6
+    midjaAvdrag: 7.6,
+    benskyddAvdrag: 0
   },
   ccm: {
     namn: "CCM",
@@ -254,7 +256,8 @@ var VARUMARKEN = {
     handskar: CCM_HANDSKAR,
     skridskor: CCM_SKRIDSKOR,
     hjalm: CCM_HJALM,
-    midjaAvdrag: 0
+    midjaAvdrag: 0,
+    benskyddAvdrag: 5.5
   }
 };
 

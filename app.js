@@ -430,7 +430,7 @@ function visaForslag(matt) {
     { ikon: "🦺", namn: "Axelskydd",                   varde: matt.brost,    lista: marke.storlekar, falt: "brost" },
     { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: marke.storlekar, falt: "underarm" },
     { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: marke.storlekar, falt: "midja", avdrag: marke.midjaAvdrag },
-    { ikon: "🦵", namn: "Benskydd",                    varde: matt.skenben,  lista: marke.benskydd,  falt: "cm" },
+    { ikon: "🦵", namn: "Benskydd",                    varde: matt.skenben,  lista: marke.benskydd,  falt: "cm", avdrag: marke.benskyddAvdrag, notis: marke.benskyddAvdrag ? "justerat: " + marke.namn + " mäter till skridskokanten" : null },
     { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: marke.handskar,  falt: "cm" },
     { ikon: "⛸️", namn: "Skridskor",                   varde: matt.fotlangd, typ: "skridsko", skridskor: marke.skridskor }
   ];
@@ -487,6 +487,11 @@ function visaForslag(matt) {
         sken += " · från skostorlek, mät och prova i butik";
       }
       svar += ' <span class="forslag-extra">' + sken + "</span>";
+    }
+
+    // En extra notis (t.ex. att måttet justerats för märkets mätmetod).
+    if (traff && f.notis) {
+      svar += ' <span class="forslag-extra">' + f.notis + "</span>";
     }
 
     // Om det inte var en exakt träff (eller bara uppskattat från skostorlek): visa "ungefär".
