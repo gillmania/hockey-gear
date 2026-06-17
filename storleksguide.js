@@ -99,6 +99,14 @@ var BAUER_SKRIDSKOR = [
   { fot: 28.9, storlek: "Senior 10.5",sken: 288 }
 ];
 
+// Bauer hjälm: huvudomkrets (cm) → storlek. Siffror från Bauers hjälmguide (hockeymonkey.com).
+// OBS: hjälmar är justerbara och varierar mellan modeller – prova alltid.
+var BAUER_HJALM = [
+  { storlek: "Small",  cm: [51, 55.5] },
+  { storlek: "Medium", cm: [54.5, 59] },
+  { storlek: "Large",  cm: [57.5, 62] }
+];
+
 // Ungefärlig omräkning från EU-skostorlek till fotlängd i cm.
 // OBS: skostorlekar skiljer sig mellan märken – mät hellre foten och prova i butik.
 // Formel: EU-storlek ≈ (fotlängd + 1,5 cm tåmån) × 1,5  =>  fotlängd ≈ EU / 1,5 − 1,5
@@ -183,7 +191,7 @@ var VARUMARKEN = {
     benskydd: BAUER_BENSKYDD,
     handskar: BAUER_HANDSKAR,
     skridskor: BAUER_SKRIDSKOR,
-    hjalm: null,
+    hjalm: BAUER_HJALM,
     midjaAvdrag: 7.6
   },
   ccm: {
