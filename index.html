@@ -151,8 +151,20 @@
 
       <!-- Förslag på storlek räknas ut av app.js utifrån måtten -->
       <h2>Förslag på storlek</h2>
-      <p class="hjalptext">Räknas ut automatiskt från dina mått enligt Bauers guide. Mät noga och prova alltid i butik om du kan.</p>
+      <p class="hjalptext">Räknas ut automatiskt från dina mått. Mät noga och prova alltid i butik om du kan.</p>
+
+      <label class="varumarke-val">
+        Märke för storleksförslagen
+        <select id="varumarke"></select>
+      </label>
+
       <div id="forslag-lista"></div>
+
+      <p class="friskrivning">
+        Appen är inte kopplad till eller godkänd av Bauer, CCM eller andra märken. Alla varumärken
+        tillhör respektive ägare. Storleksförslagen är en hjälp – kontrollera alltid storleken hos
+        återförsäljaren innan du köper.
+      </p>
 
       <form id="matt-form">
         <label>
@@ -210,6 +222,10 @@
 
   <footer>
     <button id="dela-knapp" class="dela-knapp" onclick="delaApp()">📤 Dela appen med en kompis</button>
+    <p class="om-appen">
+      Min Hockeyutrustning · en oberoende app. Varumärken som Bauer och CCM tillhör respektive
+      ägare och appen är inte kopplad till dem.
+    </p>
   </footer>
 
   <script src="storleksguide.js"></script>

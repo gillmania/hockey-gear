@@ -1,7 +1,14 @@
-// ===== Bauers storleksguide =====
-// Alla siffror kommer från Bauers tabell "Bauer Protective Equipment".
-// Om någon siffra är fel: ändra bara talen här, så funkar resten av appen.
+// ===== Storleksguider per varumärke =====
+// Just nu finns Bauer. Vill du lägga till ett märke (t.ex. CCM):
+//   1) kopiera Bauer-tabellerna nedan, byt namn (t.ex. CCM_STORLEKAR) och skriv in märkets siffror,
+//   2) lägg till en rad i VARUMARKEN längst ned i filen.
+// Resten av appen (märkesväljaren och förslagen) sköter sig själv.
+//
+// VIKTIGT: hitta inte på siffror – använd bara märkets officiella storleksguide.
 // Ett intervall [min, max] betyder "från min till max". 999 betyder "och uppåt".
+
+// ===== Bauer =====
+// Alla siffror kommer från Bauers tabell "Bauer Protective Equipment".
 
 // Varje storlek (Youth S, Junior M, Senior L ...) med sina mått-intervall.
 // vikt = kg, langd/brost/underarm/midja = cm. null = finns inte för den storleken.
@@ -103,24 +110,39 @@ function skostorlekTillFotlangd(eu) {
   return tal / 1.5 - 1.5;
 }
 
-// Hittar rätt skridskostorlek utifrån fotlängd.
+// Hittar rätt skridskostorlek utifrån fotlängd, i det valda märkets skridskotabell.
 // Skridskor ska rymma foten, så vi väljer den minsta storlek vars fotlängd räcker (avrundar uppåt).
-function hittaSkridsko(fotlangd) {
+function hittaSkridsko(fotlangd, skridskor) {
   var tal = parseFloat(fotlangd);
-  if (!fotlangd || isNaN(tal)) {
-    return null; // Ingen fotlängd ifylld än.
+  if (!fotlangd || isNaN(tal) || !skridskor) {
+    return null; // Ingen fotlängd ifylld än (eller inget märke med skridskor).
   }
 
   // Leta efter första storlek vars fotmått är minst lika stort som foten.
-  for (var i = 0; i < BAUER_SKRIDSKOR.length; i++) {
-    if (BAUER_SKRIDSKOR[i].fot >= tal) {
-      return { rad: BAUER_SKRIDSKOR[i], exakt: true };
+  for (var i = 0; i < skridskor.length; i++) {
+    if (skridskor[i].fot >= tal) {
+      return { rad: skridskor[i], exakt: true };
     }
   }
 
   // Foten är större än hela tabellen – ta största storleken (ungefärligt).
-  return { rad: BAUER_SKRIDSKOR[BAUER_SKRIDSKOR.length - 1], exakt: false };
+  return { rad: skridskor[skridskor.length - 1], exakt: false };
 }
+
+
+// ===== Alla varumärken samlade =====
+// Märkesväljaren i appen visar dessa, och förslagen använder det valda märkets tabeller.
+// Lägg till fler märken här när du har deras officiella siffror.
+var VARUMARKEN = {
+  bauer: {
+    namn: "Bauer",
+    storlekar: BAUER_STORLEKAR,
+    benskydd: BAUER_BENSKYDD,
+    handskar: BAUER_HANDSKAR,
+    skridskor: BAUER_SKRIDSKOR
+  }
+  // ccm: { namn: "CCM", storlekar: CCM_STORLEKAR, benskydd: ..., handskar: ..., skridskor: ... }
+};
 
 
 // ===== Hjälpfunktion som hittar rätt storlek =====

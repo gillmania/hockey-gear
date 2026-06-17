@@ -203,15 +203,18 @@ function ritaMatt() {
 
 // Räknar ut och visar vilken storlek man borde ha på varje skydd.
 function visaForslag(matt) {
+  // Vilket märke har man valt? Förslagen använder det märkets tabeller.
+  var marke = VARUMARKEN[valtVarumarkeId()];
+
   // Varje rad: vilken ikon, vad det heter, vilket mått och vilken tabell vi slår i.
   var forslag = [
-    { ikon: "👕", namn: "Allmän storlek (tröja m.m.)", varde: matt.langd,    lista: BAUER_STORLEKAR, falt: "langd" },
-    { ikon: "🦺", namn: "Axelskydd",                   varde: matt.brost,    lista: BAUER_STORLEKAR, falt: "brost" },
-    { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: BAUER_STORLEKAR, falt: "underarm" },
-    { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: BAUER_STORLEKAR, falt: "midja", avdrag: 7.6 },
-    { ikon: "🦵", namn: "Benskydd/skenor",             varde: matt.skenben,  lista: BAUER_BENSKYDD,  falt: "cm" },
-    { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: BAUER_HANDSKAR,  falt: "cm" },
-    { ikon: "⛸️", namn: "Skridskor",                   varde: matt.fotlangd, typ: "skridsko" }
+    { ikon: "👕", namn: "Allmän storlek (tröja m.m.)", varde: matt.langd,    lista: marke.storlekar, falt: "langd" },
+    { ikon: "🦺", namn: "Axelskydd",                   varde: matt.brost,    lista: marke.storlekar, falt: "brost" },
+    { ikon: "💪", namn: "Armbågsskydd",                varde: matt.underarm, lista: marke.storlekar, falt: "underarm" },
+    { ikon: "🩳", namn: "Hockeybyxa",                  varde: matt.midja,    lista: marke.storlekar, falt: "midja", avdrag: 7.6 },
+    { ikon: "🦵", namn: "Benskydd/skenor",             varde: matt.skenben,  lista: marke.benskydd,  falt: "cm" },
+    { ikon: "🧤", namn: "Handskar",                    varde: matt.handlangd,lista: marke.handskar,  falt: "cm" },
+    { ikon: "⛸️", namn: "Skridskor",                   varde: matt.fotlangd, typ: "skridsko", skridskor: marke.skridskor }
   ];
 
   var ruta = document.getElementById("forslag-lista");
@@ -230,7 +233,7 @@ function visaForslag(matt) {
         fot = skostorlekTillFotlangd(matt.skostorlek);
         franSko = true;
       }
-      traff = hittaSkridsko(fot);
+      traff = hittaSkridsko(fot, f.skridskor);
     } else {
       // En del skydd (hockeybyxan) ska ha ett avdrag innan vi slår upp storleken.
       var varde = f.varde;
@@ -276,6 +279,43 @@ function visaForslag(matt) {
   }
 }
 
+// ===== Märkesväljare =====
+var NYCKEL_VARUMARKE = "valtVarumarke";
+
+// Vilket märke är valt? Faller tillbaka på det första märket om inget är sparat.
+function valtVarumarkeId() {
+  var sparat = loadData(NYCKEL_VARUMARKE, null);
+  if (sparat && VARUMARKEN[sparat]) {
+    return sparat;
+  }
+  return Object.keys(VARUMARKEN)[0];
+}
+
+// Fyller märkes-menyn med alla märken och kommer ihåg vad man valt.
+function fyllVarumarken() {
+  var valj = document.getElementById("varumarke");
+  if (!valj) {
+    return;
+  }
+
+  valj.innerHTML = "";
+  var ids = Object.keys(VARUMARKEN);
+  for (var i = 0; i < ids.length; i++) {
+    var alternativ = document.createElement("option");
+    alternativ.value = ids[i];
+    alternativ.textContent = VARUMARKEN[ids[i]].namn;
+    valj.appendChild(alternativ);
+  }
+
+  valj.value = valtVarumarkeId();
+
+  // När man byter märke: spara valet och räkna om förslagen.
+  valj.addEventListener("change", function () {
+    saveData(NYCKEL_VARUMARKE, valj.value);
+    ritaMatt();
+  });
+}
+
 // Sparar måtten när man skickar formuläret.
 function sparaMatt(event) {
   event.preventDefault();
@@ -303,5 +343,6 @@ function sparaMatt(event) {
 document.getElementById("utrustning-form").addEventListener("submit", laggTillGrej);
 document.getElementById("matt-form").addEventListener("submit", sparaMatt);
 
+fyllVarumarken();
 ritaUtrustning();
 ritaMatt();
