@@ -4,8 +4,8 @@
   "description": "Håll koll på din hockeyutrustning och dina mått.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f2f5f9",
-  "theme_color": "#0b5cab",
+  "background_color": "#0a1626",
+  "theme_color": "#0a1626",
   "icons": [
     {
       "src": "icon.svg",

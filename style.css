@@ -1,13 +1,18 @@
-/* ===== Enkel stil gjord för mobilen (iPhone 12) ===== */
+/* ===== Hockey Arena – 16-bitars tema (iPhone-först) ===== */
 
-/* Färger som används i hela appen. Ändra här så ändras allt. */
 :root {
-  --bla: #0b5cab;
-  --bla-mork: #084a8c;
-  --rod: #c0392b;
-  --bakgrund: #f2f5f9;
-  --kort: #ffffff;
-  --text: #1d2733;
+  --bla: #39c2ff;        /* is-blå accent */
+  --bla-mork: #1f9fe0;
+  --rod: #ff3b47;        /* hockey-röd */
+  --gron: #36e0a0;
+  --gold: #ffd23f;
+  --bakgrund: #0a1626;   /* mörk rink */
+  --kort: #13243d;       /* panel */
+  --panel2: #0e1d33;     /* fält/inramning */
+  --line: #27425f;
+  --text: #eaf2fb;
+  --muted: #9fb3c8;
+  --pixel: "Press Start 2P", ui-monospace, monospace;
 }
 
 * {
@@ -17,44 +22,68 @@
 body {
   margin: 0;
   font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--bakgrund);
   color: var(--text);
-  /* Lite extra plats längst ner så sista knappen inte fastnar i kanten */
+  background:
+    radial-gradient(1200px 400px at 50% -120px, #16335a 0%, rgba(22, 51, 90, 0) 70%),
+    linear-gradient(180deg, #0b1a30 0%, var(--bakgrund) 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
   padding-bottom: 40px;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
+/* ===== Header (scoreboard) ===== */
 header {
-  background: var(--bla);
-  color: white;
-  padding: 18px 16px;
   text-align: center;
+  padding: 22px 16px 18px;
+  background: linear-gradient(180deg, #102845 0%, rgba(16, 40, 69, 0) 100%);
+  border-bottom: 2px solid var(--line);
 }
 
 header h1 {
   margin: 0;
-  font-size: 22px;
+  font-family: var(--pixel);
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--bla);
+  text-shadow: 0 2px 0 #0b3a5c, 0 0 14px rgba(57, 194, 255, 0.45);
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
 }
 
-/* ===== Flik-knapparna högst upp ===== */
+/* ===== Flikar (arcade-knappar) ===== */
 .flikar {
   display: flex;
-  background: var(--bla-mork);
+  gap: 8px;
+  max-width: 600px;
+  margin: 14px auto 0;
+  padding: 0 16px;
 }
 
 .flik-knapp {
   flex: 1;
-  padding: 14px;
-  border: none;
-  background: var(--bla-mork);
-  color: #cfe0f3;
-  font-size: 16px;
-  font-weight: bold;
+  padding: 13px 8px;
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  background: var(--kort);
+  color: var(--muted);
+  font-family: var(--pixel);
+  font-size: 8px;
+  line-height: 1.5;
   cursor: pointer;
+  transition: transform 0.05s ease;
 }
 
 .flik-knapp.aktiv {
-  background: var(--bakgrund);
-  color: var(--bla);
+  background: linear-gradient(180deg, var(--bla) 0%, var(--bla-mork) 100%);
+  color: #052437;
+  border-color: var(--bla);
+  box-shadow: 0 0 14px rgba(57, 194, 255, 0.4);
+}
+
+.flik-knapp:active {
+  transform: translateY(1px);
 }
 
 main {
@@ -64,67 +93,91 @@ main {
 }
 
 h2 {
-  font-size: 18px;
-  margin: 22px 0 10px;
+  font-family: var(--pixel);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--gold);
+  margin: 24px 0 12px;
+  text-transform: uppercase;
 }
 
 .hjalptext {
-  color: #5a6b7b;
+  color: var(--muted);
   margin-top: 0;
-  font-size: 15px;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
-/* ===== Formulär ===== */
+/* ===== Paneler / formulär ===== */
 form {
   background: var(--kort);
-  padding: 14px;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 label {
   display: block;
-  margin-bottom: 12px;
-  font-weight: bold;
-  font-size: 15px;
+  margin-bottom: 14px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text);
 }
 
 input,
 select {
   width: 100%;
-  margin-top: 6px;
+  margin-top: 7px;
   padding: 12px;
-  font-size: 16px; /* 16px gör att iPhone inte zoomar in när man skriver */
-  border: 1px solid #c8d2dd;
-  border-radius: 8px;
-  font-weight: normal;
+  font-size: 16px; /* 16px hindrar iPhone från att zooma in */
+  border: 2px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel2);
+  color: var(--text);
+  font-weight: 600;
 }
 
-/* ===== Stora knappar som är lätta att trycka på ===== */
+input::placeholder {
+  color: #6c8095;
+  font-weight: 400;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--bla);
+  box-shadow: 0 0 0 3px rgba(57, 194, 255, 0.2);
+}
+
+/* ===== Stora knappar ===== */
 .stor-knapp {
   width: 100%;
   padding: 15px;
   margin-top: 6px;
   border: none;
-  border-radius: 10px;
-  background: var(--bla);
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
+  border-radius: 11px;
+  background: linear-gradient(180deg, var(--bla) 0%, var(--bla-mork) 100%);
+  color: #04263b;
+  font-family: var(--pixel);
+  font-size: 12px;
   cursor: pointer;
+  box-shadow: 0 4px 0 #115e84;
 }
 
 .stor-knapp:active {
-  background: var(--bla-mork);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #115e84;
 }
 
-/* ===== Korten i listan över utrustning ===== */
+/* ===== Korten i utrustningslistan ===== */
 .kort {
   background: var(--kort);
+  border: 2px solid var(--line);
   border-radius: 12px;
-  padding: 14px;
+  padding: 12px 14px;
   margin-bottom: 10px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -132,14 +185,14 @@ select {
 }
 
 .kort-info .kort-typ {
-  font-weight: bold;
-  font-size: 17px;
+  font-weight: 800;
+  font-size: 16px;
 }
 
 .kort-info .kort-detalj {
-  color: #5a6b7b;
-  font-size: 14px;
-  margin-top: 3px;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
 }
 
 .kort-knappar {
@@ -149,41 +202,41 @@ select {
   gap: 6px;
 }
 
-.ta-bort-knapp {
+.ta-bort-knapp,
+.andra-knapp {
   border: none;
-  background: var(--rod);
-  color: white;
+  color: #04263b;
   border-radius: 8px;
   padding: 8px 14px;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 800;
   cursor: pointer;
 }
 
 .andra-knapp {
-  border: none;
   background: var(--bla);
-  color: white;
-  border-radius: 8px;
-  padding: 8px 14px;
-  font-size: 14px;
-  cursor: pointer;
 }
 
-/* ===== Avbryt-knapp i redigeringsläge ===== */
+.ta-bort-knapp {
+  background: var(--rod);
+  color: #fff;
+}
+
+/* ===== Avbryt-knapp ===== */
 .avbryt-knapp {
   width: 100%;
   padding: 12px;
   margin-top: 8px;
-  border: 2px solid #c8d2dd;
+  border: 2px solid var(--line);
   border-radius: 10px;
-  background: white;
-  color: #5a6b7b;
-  font-size: 16px;
-  font-weight: bold;
+  background: transparent;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
 }
 
-/* ===== Filter-rad ===== */
+/* ===== Filter ===== */
 .filter-rad {
   display: flex;
   gap: 10px;
@@ -192,13 +245,14 @@ select {
 
 .filter-rad label {
   flex: 1;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 13px;
+  font-weight: 700;
   margin-bottom: 0;
+  color: var(--muted);
 }
 
 .tomt-meddelande {
-  color: #7a8a99;
+  color: var(--muted);
   text-align: center;
   padding: 20px;
 }
@@ -206,112 +260,92 @@ select {
 .sparat-meddelande {
   margin-top: 14px;
   text-align: center;
-  font-weight: bold;
-  color: #1d8a4a;
+  font-weight: 800;
+  color: var(--gron);
 }
 
-/* ===== Människofiguren på mått-fliken ===== */
+/* ===== Människofiguren ===== */
 #matt-figur {
   display: block;
   width: 100%;
   max-width: 360px;
   margin: 6px auto 16px;
-  background: var(--kort);
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  background: var(--panel2);
+  border: 2px solid var(--line);
+  border-radius: 14px;
   padding: 8px;
 }
 
-/* Armar och ben (tjocka rundade streck) */
 #matt-figur .lem {
   fill: none;
-  stroke: #2c6fb3;
+  stroke: #2f7fc4;
   stroke-width: 16;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-/* Tröjan på bålen */
 #matt-figur .troja {
   fill: url(#troja);
-  stroke: #2c6fb3;
+  stroke: #2f7fc4;
   stroke-width: 2;
 }
 
-/* Hud (huvud, hals, händer) */
-#matt-figur .hud {
-  fill: #f3cfa6;
-  stroke: #d9a978;
-  stroke-width: 2;
-}
-
+#matt-figur .hud,
 #matt-figur .hand {
   fill: #f3cfa6;
   stroke: #d9a978;
   stroke-width: 2;
 }
 
-/* Ansikte */
 #matt-figur .oga {
-  fill: #3a3a3a;
+  fill: #21303f;
 }
 
 #matt-figur .mun {
   fill: none;
-  stroke: #3a3a3a;
+  stroke: #21303f;
   stroke-width: 2;
   stroke-linecap: round;
 }
 
-/* Skridskor */
 #matt-figur .skridsko {
-  fill: #2b3a4a;
+  fill: #61748c;
 }
 
-/* Streck från kroppen ut till etiketten */
 #matt-figur .ledare line {
-  stroke: #9bb1c6;
+  stroke: #6f89a3;
   stroke-width: 1.5;
   stroke-dasharray: 3 3;
 }
 
-/* Vit ring runt prickarna så de syns bättre */
 #matt-figur .prickar circle {
-  stroke: white;
+  fill: var(--rod);
+  stroke: #fff;
   stroke-width: 2;
 }
 
-/* De numrerade prickarna */
-#matt-figur .prickar circle {
-  fill: #e8703a;
-}
-
 #matt-figur .prickar text {
-  fill: white;
+  fill: #fff;
   font-size: 15px;
   font-weight: bold;
   text-anchor: middle;
   dominant-baseline: central;
 }
 
-/* Texten med själva måtten */
-#matt-figur .figur-etikett text {
+#matt-figur .figur-etikett text,
+#matt-figur .figur-topp {
   font-size: 13px;
   fill: var(--text);
-}
-
-#matt-figur .figur-etikett tspan {
-  font-weight: bold;
-  fill: var(--bla);
 }
 
 #matt-figur .figur-topp {
   font-size: 14px;
   font-weight: bold;
-  fill: var(--text);
 }
 
+#matt-figur .figur-etikett tspan,
 #matt-figur .figur-topp tspan {
+  font-weight: bold;
   fill: var(--bla);
 }
 
@@ -319,48 +353,61 @@ select {
 .forslag-rad {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   background: var(--kort);
+  border: 2px solid var(--line);
   border-radius: 12px;
-  padding: 12px 14px;
+  padding: 10px 12px;
   margin-bottom: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Ikonerna sitter i en "inventory slot" */
+.forslag-ikon,
+.kort-typ-ikon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--panel2);
+  border: 2px solid var(--line);
+  border-radius: 8px;
 }
 
 .forslag-ikon {
-  flex-shrink: 0;
-  color: var(--bla);
-  display: inline-flex;
-}
-
-.forslag-ikon svg {
-  width: 26px;
-  height: 26px;
-  display: block;
-}
-
-/* Ikon framför utrustningens namn på korten */
-.kort-typ {
-  display: flex;
-  align-items: center;
-  gap: 7px;
+  width: 44px;
+  height: 44px;
 }
 
 .kort-typ-ikon {
-  color: var(--bla);
-  display: inline-flex;
-  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+}
+
+.forslag-ikon svg,
+.kort-typ-ikon svg {
+  display: block;
+  image-rendering: pixelated;
+}
+
+.forslag-ikon svg {
+  width: 30px;
+  height: 30px;
 }
 
 .kort-typ-ikon svg {
-  width: 22px;
-  height: 22px;
-  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.kort-typ {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
 
 .forslag-namn {
   flex: 1;
-  font-weight: bold;
+  font-weight: 800;
   font-size: 15px;
 }
 
@@ -371,29 +418,30 @@ select {
 
 .forslag-storlek {
   display: inline-block;
-  background: var(--bla);
-  color: white;
-  font-weight: bold;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-size: 15px;
+  background: var(--gold);
+  color: #2a2200;
+  font-family: var(--pixel);
+  font-size: 10px;
+  padding: 7px 9px;
+  border-radius: 6px;
+  box-shadow: 0 2px 0 #b8930a;
 }
 
 .forslag-ungefar {
-  color: #7a8a99;
-  font-size: 13px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .forslag-extra {
   display: block;
-  color: #5a6b7b;
-  font-size: 12px;
-  margin-top: 3px;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 4px;
 }
 
 .forslag-tom {
-  color: #9aa7b4;
-  font-size: 14px;
+  color: #6c8095;
+  font-size: 13px;
   font-style: italic;
 }
 
@@ -401,31 +449,31 @@ select {
 .varumarke-val {
   display: block;
   background: var(--kort);
+  border: 2px solid var(--line);
   border-radius: 12px;
   padding: 12px 14px;
   margin-bottom: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  font-weight: bold;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 14px;
 }
 
-/* ===== Friskrivningstext ===== */
+/* ===== Friskrivning ===== */
 .friskrivning {
-  color: #7a8a99;
+  color: var(--muted);
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.45;
   margin-top: 14px;
 }
 
 .om-appen {
-  color: #9aa7b4;
+  color: #6c8095;
   font-size: 11px;
-  line-height: 1.4;
+  line-height: 1.45;
   text-align: center;
   margin-top: 12px;
 }
 
-/* ===== Dela-knappen längst ner ===== */
+/* ===== Footer / dela ===== */
 footer {
   padding: 8px 16px 30px;
   max-width: 600px;
@@ -436,19 +484,18 @@ footer {
   width: 100%;
   padding: 14px;
   border: 2px solid var(--bla);
-  border-radius: 10px;
-  background: white;
+  border-radius: 11px;
+  background: transparent;
   color: var(--bla);
-  font-size: 16px;
-  font-weight: bold;
+  font-family: var(--pixel);
+  font-size: 10px;
   cursor: pointer;
 }
 
 .dela-knapp:active {
-  background: #eaf1fa;
+  background: rgba(57, 194, 255, 0.12);
 }
 
-/* Hjälpklass för att gömma saker */
 .dold {
   display: none;
 }
