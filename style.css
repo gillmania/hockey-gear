@@ -328,8 +328,34 @@ select {
 }
 
 .forslag-ikon {
-  font-size: 22px;
   flex-shrink: 0;
+  color: var(--bla);
+  display: inline-flex;
+}
+
+.forslag-ikon svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+/* Ikon framför utrustningens namn på korten */
+.kort-typ {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.kort-typ-ikon {
+  color: var(--bla);
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.kort-typ-ikon svg {
+  width: 22px;
+  height: 22px;
+  display: block;
 }
 
 .forslag-namn {

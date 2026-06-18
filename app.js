@@ -7,25 +7,9 @@
 var NYCKEL_UTRUSTNING = "hockeyGear";
 var NYCKEL_MATT = "hockeyMeasurements";
 
-// En ikon (emoji) för varje typ av grej. Vill du byta ikon? Ändra bara emojin här!
-var IKONER = {
-  "Hjälm": "⛑️",
-  "Halsskydd": "🧣",
-  "Axelskydd": "🦺",
-  "Armbågsskydd": "💪",
-  "Handskar": "🧤",
-  "Hockeybyxa": "🩳",
-  "Benskydd": "🦵",
-  "Skridskor": "⛸️",
-  "Klubba": "🏒",
-  "Suspensoar": "🛡️",
-  "Hockeyväska": "🧳",
-  "Annat": "📦"
-};
-
-// Hämtar rätt ikon för en typ. Om vi inte hittar någon används 🏒.
+// Hämtar rätt ikon (SVG) för en typ av grej. Ikonerna finns i ikoner.js.
 function ikonForTyp(typ) {
-  return IKONER[typ] || "🏒";
+  return ikonSvg(typ);
 }
 
 
@@ -178,7 +162,7 @@ function ritaUtrustning() {
     kort.className = "kort";
     kort.innerHTML =
       '<div class="kort-info">' +
-        '<div class="kort-typ">' + ikonForTyp(grej.typ) + " " + grej.typ + "</div>" +
+        '<div class="kort-typ"><span class="kort-typ-ikon">' + ikonForTyp(grej.typ) + "</span>" + grej.typ + "</div>" +
         '<div class="kort-detalj">' + detaljer + "</div>" +
       "</div>" +
       '<div class="kort-knappar">' +
@@ -420,15 +404,16 @@ function ritaMatt() {
 
 // Ordningen som förslagen visas i, och ikon + namn för varje del.
 var FORSLAG_ORDNING = ["hjalm", "allman", "axel", "armbage", "byxa", "benskydd", "handske", "skridsko"];
+// ikon = nyckel i IKON_SVG (ikoner.js)
 var FORSLAG_META = {
-  hjalm:    { ikon: "⛑️", namn: "Hjälm" },
-  allman:   { ikon: "👕", namn: "Allmän storlek (tröja m.m.)" },
-  axel:     { ikon: "🦺", namn: "Axelskydd" },
-  armbage:  { ikon: "💪", namn: "Armbågsskydd" },
-  byxa:     { ikon: "🩳", namn: "Hockeybyxa" },
-  benskydd: { ikon: "🦵", namn: "Benskydd" },
-  handske:  { ikon: "🧤", namn: "Handskar" },
-  skridsko: { ikon: "⛸️", namn: "Skridskor" }
+  hjalm:    { ikon: "Hjälm",        namn: "Hjälm" },
+  allman:   { ikon: "Tröja",        namn: "Allmän storlek (tröja m.m.)" },
+  axel:     { ikon: "Axelskydd",    namn: "Axelskydd" },
+  armbage:  { ikon: "Armbågsskydd", namn: "Armbågsskydd" },
+  byxa:     { ikon: "Hockeybyxa",   namn: "Hockeybyxa" },
+  benskydd: { ikon: "Benskydd",     namn: "Benskydd" },
+  handske:  { ikon: "Handskar",     namn: "Handskar" },
+  skridsko: { ikon: "Skridskor",    namn: "Skridskor" }
 };
 
 // Räknar ut och visar vilken storlek man borde ha på varje skydd.
@@ -500,7 +485,7 @@ function visaForslag(matt) {
     var rad = document.createElement("div");
     rad.className = "forslag-rad";
     rad.innerHTML =
-      '<span class="forslag-ikon">' + meta.ikon + "</span>" +
+      '<span class="forslag-ikon">' + ikonSvg(meta.ikon) + "</span>" +
       '<span class="forslag-namn">' + meta.namn + "</span>" +
       '<span class="forslag-svar">' + svar + "</span>";
     ruta.appendChild(rad);
