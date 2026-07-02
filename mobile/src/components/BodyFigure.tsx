@@ -58,7 +58,6 @@ export function BodyFigure({ measurements, units }: Props) {
       {/* ===== The body ===== */}
       <G>
         {/* Legs (pants) */}
-        <Path d="M152,205 L140,310 L138,398" stroke="#1c3permanent" strokeWidth={0} fill="none" />
         <Path d="M152,205 L140,310 L138,398" stroke="#274b70" strokeWidth={22} strokeLinecap="round" fill="none" />
         <Path d="M188,205 L200,310 L202,398" stroke="#274b70" strokeWidth={22} strokeLinecap="round" fill="none" />
         {/* Skates */}
