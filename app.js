@@ -56,6 +56,30 @@ function delaApp() {
 }
 
 
+// Exporterar all sparad data som JSON, för import i nya mobilappen.
+// Kopierar till urklipp eller visar systemets dela-ruta.
+function exporteraData() {
+  var data = {
+    exportVersion: 1,
+    hockeyGear: loadData(NYCKEL_UTRUSTNING, []),
+    hockeyMeasurements: loadData(NYCKEL_MATT, {}),
+    valtVarumarke: loadData("valtVarumarke", null)
+  };
+  var text = JSON.stringify(data);
+
+  if (navigator.share) {
+    navigator.share({ title: "Min Hockeyutrustning – export", text: text }).catch(function () {
+      // Användaren avbröt – gör inget.
+    });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text);
+    alert("Din data är kopierad! Klistra in den i nya appen under Inställningar → Importera data.");
+  } else {
+    prompt("Kopiera texten nedan och klistra in i nya appen:", text);
+  }
+}
+
+
 // ===== Byta mellan de två flikarna =====
 function visaFlik(namn) {
   var sidaUtrustning = document.getElementById("sida-utrustning");

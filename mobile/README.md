@@ -1,56 +1,55 @@
-# Welcome to your Expo app 👋
+# Hockey Gear — mobilappen
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Cross-platform-appen (iOS + Android) byggd med [Expo](https://expo.dev)
+/ React Native + TypeScript. Efterföljaren till webbappen i repo-roten.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Kom igång
 
 ```bash
-npm run reset-project
+npm install
+npx expo start        # skanna QR-koden med Expo Go på telefonen
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Kör i webbläsaren istället: tryck `w` i Expo-terminalen (eller
+`npx expo start --web`).
 
-### Other setup steps
+## Vanliga kommandon
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+npx jest              # kör testerna (storleksmotorn har golden value-tester)
+npx tsc --noEmit      # typkontroll
+npx eslint .          # lint
+```
 
-## Learn more
+## Struktur
 
-To learn more about developing your project with Expo, look at the following resources:
+```
+src/
+├── app/              # skärmar (Expo Router, filbaserad routing)
+├── domain/sizing/    # storleksmotorn – ren TS, inga React-imports
+│   └── brands/       # en fil per märke, källhänvisad (se docs/BRAND-DATA-GUIDE.md)
+├── data/             # zustand-stores (AsyncStorage), schema, legacy-import
+├── i18n/             # svenska + engelska
+├── icons/            # pixel-ikonerna (rutnät → SVG)
+├── components/       # delade byggstenar (PixelButton, BodyFigure ...)
+└── theme/            # färger/typsnitt (16-bitars rink-tema)
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Grundprinciper:
 
-## Join the community
+- **Allt lagras metriskt** (cm/kg) – enheter är bara visning
+- **Måtthistoriken är append-only** – varje "Spara mått" blir en ny post,
+  det driver tillväxtgraferna och "växer ur snart"-varningen
+- **Inga påhittade storlekssiffror** – varje tabellvärde kommer från
+  märkets officiella guide, med källa i filhuvudet
 
-Join our community of developers creating universal apps.
+## Släppa i butikerna
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Se [docs/RELEASE-GUIDE.md](../docs/RELEASE-GUIDE.md).
+
+## Versionsnoter för beroenden
+
+- `jest` är pinnad till v29 – `jest-expo@57` stödjer inte jest 30
+- `eslint` är pinnad till v9 – `eslint-config-expo@57` stödjer inte eslint 10
+- `npm install` behöver `--legacy-peer-deps` (peer-konflikt kring
+  `react-server-dom-webpack` i Expo SDK 57)
