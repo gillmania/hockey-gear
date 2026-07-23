@@ -7,6 +7,8 @@ import { ScrollView, StyleSheet, Text, TextInput, TextInputProps, Pressable, Vie
 
 import { colors, pixelFont, radius, spacing } from '../theme';
 
+const NBSP = String.fromCharCode(0xa0); // U+00A0 non-breaking space
+
 export function Card({ style, ...props }: ViewProps) {
   return <View style={[styles.card, style]} {...props} />;
 }
@@ -39,6 +41,12 @@ export function ChipRow<T extends string>({ options, selected, onSelect }: ChipR
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
       {options.map((option) => {
         const active = option.value === selected;
+        // Android under-measures text width, so a wide trailing glyph (e.g. the
+        // M in "Senior M") gets dropped — wrapped onto a hidden second line, or
+        // clipped off the right edge. Joining words with non-breaking spaces
+        // stops the wrap, and a trailing NBSP means the last real glyph is never
+        // the one at the clip boundary. Display-only; the stored size is unchanged.
+        const label = option.label.replace(/ /g, NBSP) + NBSP;
         return (
           <Pressable
             key={option.value}
@@ -47,7 +55,9 @@ export function ChipRow<T extends string>({ options, selected, onSelect }: ChipR
             onPress={() => onSelect(option.value)}
             style={[styles.chip, active && styles.chipActive]}
           >
-            <Text style={[styles.chipLabel, active && styles.chipLabelActive]}>{option.label}</Text>
+            <Text textBreakStrategy="simple" style={[styles.chipLabel, active && styles.chipLabelActive]}>
+              {label}
+            </Text>
           </Pressable>
         );
       })}
@@ -117,7 +127,10 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   chipLabelActive: {
+    // Emphasis comes from the blue background + accent text colour. We keep the
+    // same font weight as the inactive label on purpose: switching to bold
+    // widens the text, and Android under-measures bold width inside the
+    // horizontal ScrollView, clipping the last word (e.g. "Senior M" → "Senior").
     color: colors.onAccent,
-    fontWeight: '700',
   },
 });
