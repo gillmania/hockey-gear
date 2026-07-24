@@ -63,7 +63,7 @@ function exporteraData() {
     exportVersion: 1,
     hockeyGear: loadData(NYCKEL_UTRUSTNING, []),
     hockeyMeasurements: loadData(NYCKEL_MATT, {}),
-    valtVarumarke: loadData("valtVarumarke", null)
+    valtVarumarke: loadData(NYCKEL_VARUMARKE, null)
   };
   var text = JSON.stringify(data);
 
@@ -182,17 +182,51 @@ function ritaUtrustning() {
       detaljer += " · " + grej.anteckning;
     }
 
+    // Bygg kortet med DOM:n i stället för innerHTML, så att det användaren
+    // skrivit (märke, anteckning ...) alltid visas som text – aldrig som HTML.
     var kort = document.createElement("div");
     kort.className = "kort";
-    kort.innerHTML =
-      '<div class="kort-info">' +
-        '<div class="kort-typ"><span class="kort-typ-ikon">' + ikonForTyp(grej.typ) + "</span>" + grej.typ + "</div>" +
-        '<div class="kort-detalj">' + detaljer + "</div>" +
-      "</div>" +
-      '<div class="kort-knappar">' +
-        '<button class="andra-knapp" onclick="redigeraGrej(' + i + ')">Ändra</button>' +
-        '<button class="ta-bort-knapp" onclick="taBortGrej(' + i + ')">Ta bort</button>' +
-      "</div>";
+
+    var info = document.createElement("div");
+    info.className = "kort-info";
+
+    var typRad = document.createElement("div");
+    typRad.className = "kort-typ";
+    var ikonSpan = document.createElement("span");
+    ikonSpan.className = "kort-typ-ikon";
+    ikonSpan.innerHTML = ikonForTyp(grej.typ); // Appens egen ikon-kod (ikoner.js), inte användardata.
+    typRad.appendChild(ikonSpan);
+    typRad.appendChild(document.createTextNode(grej.typ));
+
+    var detaljRad = document.createElement("div");
+    detaljRad.className = "kort-detalj";
+    detaljRad.textContent = detaljer;
+
+    info.appendChild(typRad);
+    info.appendChild(detaljRad);
+
+    var knappar = document.createElement("div");
+    knappar.className = "kort-knappar";
+
+    // "function (index) {...}(i)" låser in grejens plats, så att varje knapp
+    // minns sin egen grej även efter att loopen gått vidare.
+    (function (index) {
+      var andraKnapp = document.createElement("button");
+      andraKnapp.className = "andra-knapp";
+      andraKnapp.textContent = "Ändra";
+      andraKnapp.addEventListener("click", function () { redigeraGrej(index); });
+
+      var taBortKnapp = document.createElement("button");
+      taBortKnapp.className = "ta-bort-knapp";
+      taBortKnapp.textContent = "Ta bort";
+      taBortKnapp.addEventListener("click", function () { taBortGrej(index); });
+
+      knappar.appendChild(andraKnapp);
+      knappar.appendChild(taBortKnapp);
+    })(i);
+
+    kort.appendChild(info);
+    kort.appendChild(knappar);
 
     lista.appendChild(kort);
     antalVisade++;
