@@ -2,17 +2,5 @@
   "name": "hockey-gear",
   "version": "1.0.0",
   "private": true,
-  "description": "Min Hockeyutrustning - hall koll pa din hockeyutrustning och dina matt",
-  "scripts": {
-    "copy-web": "node scripts/copy-web.mjs",
-    "ios:sync": "npm run copy-web && npx cap sync ios",
-    "ios:open": "npx cap open ios"
-  },
-  "dependencies": {
-    "@capacitor/core": "^6.1.2",
-    "@capacitor/ios": "^6.1.2"
-  },
-  "devDependencies": {
-    "@capacitor/cli": "^6.1.2"
-  }
+  "description": "Min Hockeyutrustning - hall koll pa din hockeyutrustning och dina matt"
 }
