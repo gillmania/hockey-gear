@@ -1,42 +1,39 @@
-// Draws a pixel-art icon as an SVG: one small square per pixel.
-// Port of the pixelArt() function from the original web app's ikoner.js.
+// Renders a gear icon from the PNG assets in assets/icons/.
+// Same API as the old pixel-art SVG version: <PixelIcon icon="skates" size={40} />.
 
 import React from 'react';
-import Svg, { Rect } from 'react-native-svg';
+import { Image, ImageSourcePropType } from 'react-native';
 
-import { IconKey, PIXEL_ICONS, PixelIconDef } from './grids';
+import { IconKey } from './grids';
 
 interface Props {
   icon: IconKey;
   size?: number;
 }
 
-function gridDimensions(def: PixelIconDef): { w: number; h: number } {
-  let w = 0;
-  for (const row of def.rows) {
-    if (row.length > w) w = row.length;
-  }
-  return { w, h: def.rows.length };
-}
+const ICON_FILES: Record<IconKey, ImageSourcePropType> = {
+  helmet: require('../../assets/icons/helmet.png'),
+  jersey: require('../../assets/icons/jersey.png'),
+  neckGuard: require('../../assets/icons/neck-guard.png'),
+  shoulderPads: require('../../assets/icons/shoulder-pads.png'),
+  elbowPads: require('../../assets/icons/elbow-pads.png'),
+  gloves: require('../../assets/icons/gloves.png'),
+  pants: require('../../assets/icons/pants.png'),
+  shinGuards: require('../../assets/icons/shin-guards.png'),
+  skates: require('../../assets/icons/skates.png'),
+  stick: require('../../assets/icons/stick.png'),
+  jock: require('../../assets/icons/jock.png'),
+  bag: require('../../assets/icons/bag.png'),
+  other: require('../../assets/icons/other.png'),
+};
 
 export function PixelIcon({ icon, size = 32 }: Props) {
-  const def = PIXEL_ICONS[icon] ?? PIXEL_ICONS.other;
-  const { w, h } = gridDimensions(def);
-
-  const rects: React.ReactElement[] = [];
-  def.rows.forEach((row, y) => {
-    for (let x = 0; x < row.length; x++) {
-      const color = def.palette[row[x]];
-      if (color) {
-        // 1.02 in size closes tiny gaps between adjacent pixels.
-        rects.push(<Rect key={`${x}-${y}`} x={x} y={y} width={1.02} height={1.02} fill={color} />);
-      }
-    }
-  });
-
+  const source = ICON_FILES[icon] ?? ICON_FILES.other;
   return (
-    <Svg width={size} height={size} viewBox={`0 0 ${w} ${h}`}>
-      {rects}
-    </Svg>
+    <Image
+      source={source}
+      style={{ width: size, height: size }}
+      resizeMode="contain"
+    />
   );
 }
