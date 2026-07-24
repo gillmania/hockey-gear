@@ -2,6 +2,7 @@
   "expo": {
     "name": "Hockey Gear",
     "slug": "hockey-gear",
+    "owner": "gillholm",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -44,6 +45,11 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "81d25c1e-4fae-4542-9497-f3b7ad8485dd"
+      }
     }
   }
 }
