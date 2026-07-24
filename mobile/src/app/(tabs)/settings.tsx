@@ -98,10 +98,7 @@ export default function SettingsScreen() {
         <HelpText>{t('sizing.disclaimer')}</HelpText>
         <HelpText>{t('settings.privacy')}</HelpText>
         <FieldLabel>{t('settings.sources')}</FieldLabel>
-        <HelpText>
-          Bauer: “Bauer Protective Equipment”, TUUK runner chart · CCM: officiell storleksguide
-          (monkeysportseurope.com), Tacks 910, SkatePro · Warrior: intersport.se
-        </HelpText>
+        <HelpText>{t('settings.sourcesText')}</HelpText>
         <Text style={styles.version}>
           {t('settings.version')} {Constants.expoConfig?.version ?? '1.0.0'}
         </Text>
