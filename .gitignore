@@ -7,6 +7,5 @@ CLAUDE.md
 Thumbs.db
 desktop.ini
 
-# Capacitor / Node (skapas automatiskt, ska inte checkas in)
+# Node (skapas automatiskt, ska inte checkas in)
 node_modules/
-www/
